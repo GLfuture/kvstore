@@ -1,0 +1,7 @@
+{
+    "remote_addr": "192.168.124.136",
+    "remote_port": 9999,
+    "default_per_recv_length": 1024,
+    "default_per_send_length": "default",
+    "default_buffer_size": 2048
+}
