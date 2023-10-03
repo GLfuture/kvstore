@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/kvstore.dir/main.cc.o CMakeFiles/kvstore.dir/app.cc.o CMakeFiles/kvstore.dir/config.cc.o CMakeFiles/kvstore.dir/fileio.cc.o -o kvstore   -L/home/gong/projects/kvstore/server/src/../lib  -Wl,-rpath,/home/gong/projects/kvstore/server/src/../lib: -lreactor -lyaml-cpp -lspdlog 

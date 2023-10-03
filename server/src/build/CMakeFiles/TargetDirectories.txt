@@ -1,0 +1,7 @@
+/home/gong/projects/kvstore/server/src/build/CMakeFiles/kvstore.dir
+/home/gong/projects/kvstore/server/src/build/CMakeFiles/edit_cache.dir
+/home/gong/projects/kvstore/server/src/build/CMakeFiles/rebuild_cache.dir
+/home/gong/projects/kvstore/server/src/build/CMakeFiles/list_install_components.dir
+/home/gong/projects/kvstore/server/src/build/CMakeFiles/install.dir
+/home/gong/projects/kvstore/server/src/build/CMakeFiles/install/local.dir
+/home/gong/projects/kvstore/server/src/build/CMakeFiles/install/strip.dir

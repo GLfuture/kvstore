@@ -1,7 +1,0 @@
-{
-    "port": 9999,
-    "backlog":10,
-    "event_num":1024,
-    "thread_num":4,
-    "default_buffer_size": 2048
-}

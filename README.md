@@ -1,6 +1,28 @@
+<!--
+ * @Description: 
+ * @Version: 4.9
+ * @Author: Gong
+ * @Date: 2023-09-29 05:40:03
+ * @LastEditors: Gong
+ * @LastEditTime: 2023-10-01 13:24:11
+-->
 <<<<<<< HEAD
 # kvstore
 一个内存数据库
+### 依赖
+spdlog
+rapaidjson(已内置)
+gcc 版本支持C++20 (8.0以上) 
+
+=======
+### 协议
+version:1.0 //8bit
+length //16bit
+body   
+=======
+添加，删除，修改涉及锁
+
+
 =======
 ### 命令
 SET key value
@@ -36,3 +58,7 @@ SDELETE key [values..] //返回成功删除value个数
 SEXIST key value
 
 quit //客户端退出
+
+BEG
+
+END //事务

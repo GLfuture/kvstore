@@ -132,6 +132,11 @@ namespace Client_Socket_NSP
             memset(this->_buffer, 0, size);
         }
 
+        int Get_Fd()
+        {
+            return this->client_fd;
+        }
+
     private:
         void Erase(int len)
         {
@@ -142,6 +147,7 @@ namespace Client_Socket_NSP
             }
             this->wbuffer.erase(this->wbuffer.begin(), it);
         }
+
 
     private:
         int client_fd;
