@@ -1,16 +1,16 @@
 {
-    "cmake.sourceDirectory": "/home/gong/projects/kvstore/server/src",
     "files.associations": {
-        "functional": "cpp",
         "array": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
         "*.tcc": "cpp",
         "bitset": "cpp",
         "cctype": "cpp",
+        "charconv": "cpp",
         "chrono": "cpp",
         "clocale": "cpp",
         "cmath": "cpp",
+        "codecvt": "cpp",
         "compare": "cpp",
         "concepts": "cpp",
         "condition_variable": "cpp",
@@ -33,6 +33,7 @@
         "vector": "cpp",
         "exception": "cpp",
         "algorithm": "cpp",
+        "functional": "cpp",
         "iterator": "cpp",
         "memory": "cpp",
         "memory_resource": "cpp",
@@ -48,6 +49,7 @@
         "fstream": "cpp",
         "future": "cpp",
         "initializer_list": "cpp",
+        "iomanip": "cpp",
         "iosfwd": "cpp",
         "iostream": "cpp",
         "istream": "cpp",
@@ -57,6 +59,7 @@
         "numbers": "cpp",
         "ostream": "cpp",
         "semaphore": "cpp",
+        "shared_mutex": "cpp",
         "span": "cpp",
         "sstream": "cpp",
         "stdexcept": "cpp",
@@ -65,11 +68,8 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "charconv": "cpp",
-        "codecvt": "cpp",
-        "iomanip": "cpp",
         "valarray": "cpp",
         "variant": "cpp"
     },
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    "cmake.sourceDirectory": "/home/gong/projects/kvstore/server/src"
 }

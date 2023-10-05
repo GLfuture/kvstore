@@ -378,62 +378,108 @@ string APP::Decode_Set(int cmd_type, vector<string_view> &res)
 
 string APP::Exec_Cmd_Set(string key, string value)
 {
-    map<string,std::shared_ptr<Security_String>>::iterator it=string_store.find(key);
-    if(it == string_store.end()){
-        //lock_guard性能比unique_lock高
-        std::lock_guard lock(this->str_mtx);
-        it = string_store.emplace(key,std::make_shared<Security_String>()).first;
+    std::unique_lock lock(*string_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    std::lock_guard lock(*(it->second->mtx));
+    std::map<std::string, std::shared_ptr<Security_String>>::iterator it = string_store.store.find(key);
+    if(it == string_store.store.end()){
+        it = string_store.store.emplace(key,std::make_shared<Security_String>()).first;
+    }
+    lock.unlock();
+    std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
     it->second->security_string = value;
-
+    key_lock.unlock();
     return ret_msg[RET_OK];
 }
 
 string APP::Exec_Cmd_Get(string key)
 {
-    map<string,std::shared_ptr<Security_String>>::iterator it=string_store.find(key);
-    if(it==string_store.end()){
+    std::shared_lock lock(*string_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_String>>::iterator it=string_store.store.find(key);
+    if(it==string_store.store.end()){
         return ret_msg[RET_NO_KEY];
     }
-    return it->second->security_string+"\r\n";
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    return it->second->security_string+"\r\n";;
 }
 
 string APP::Exec_Cmd_Appand(string key, string value)
 {
-    map<string,std::shared_ptr<Security_String>>::iterator it=string_store.find(key);
-    if(it==string_store.end()){
+    std::shared_lock lock(*string_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_String>>::iterator it=string_store.store.find(key);
+    if(it==string_store.store.end()){
         return ret_msg[RET_NO_KEY];
     }
-    std::lock_guard lock(*((*it).second->mtx));
+    std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
     it->second->security_string.append(value);
     return ret_msg[RET_OK];
 }
 
 string APP::Exec_Cmd_Len(string key)
 {
-    map<string,std::shared_ptr<Security_String>>::iterator it=string_store.find(key);
-    if(it==string_store.end()){
+    std::shared_lock lock(*string_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_String>>::iterator it=string_store.store.find(key);
+    if(it==string_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     return std::to_string(it->second->security_string.length())+"\r\n";
 }
 
 string APP::Exec_Cmd_Delete(string key)
 {
-    std::lock_guard lock(this->str_mtx);
-    map<string,std::shared_ptr<Security_String>>::iterator it=string_store.find(key);
-    if(it==string_store.end()){
+    std::unique_lock lock(*string_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_String>>::iterator it=string_store.store.find(key);
+    if(it==string_store.store.end()){
         return ret_msg[RET_NO_KEY];
     }
-    string_store.erase(it);
+    string_store.store.erase(it);
     return ret_msg[RET_OK];
 }
 
 string APP::Exec_Cmd_Exist(string key)
 {
-    map<string,std::shared_ptr<Security_String>>::iterator it=string_store.find(key);
-    if(it==string_store.end()){
+    std::shared_lock lock(*string_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_String>>::iterator it=string_store.store.find(key);
+    if(it==string_store.store.end()){
         return ret_msg[RET_NOT_EXIST];
     }
     return ret_msg[RET_EXIST];
@@ -441,12 +487,21 @@ string APP::Exec_Cmd_Exist(string key)
 
 string APP::Exec_Cmd_ASet(string key,vector<string_view> &res)
 {
-    map<string,std::shared_ptr<Security_Array>>::iterator it = array_store.find(key);
-    if(it == array_store.end()){
-        std::lock_guard lock(this->arr_mtx);
-        it = array_store.emplace(key,std::make_shared<Security_Array>()).first;
+    std::unique_lock lock(*array_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    std::lock_guard lock(*(it->second->mtx));
+    std::map<std::string,std::shared_ptr<Security_Array>>::iterator it = array_store.store.find(key);
+    if(it == array_store.store.end()){
+        it = array_store.store.emplace(key,std::make_shared<Security_Array>()).first;
+    }
+    lock.unlock();
+    std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
     for(int i=2;i < res.size();i++)
     {
         //这里不能使用empalce_back，匿名对象会被释放
@@ -458,10 +513,20 @@ string APP::Exec_Cmd_ASet(string key,vector<string_view> &res)
 
 string APP::Exec_Cmd_AGet(string key)
 {
-    map<string,std::shared_ptr<Security_Array>>::iterator it = array_store.find(key);
+    std::shared_lock lock(*array_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_Array>>::iterator it = array_store.store.find(key);
     //未找到key
-    if( it == array_store.end()){
+    if( it == array_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     //使用span进行只读操作
     span<string> res((*it).second->security_array);
@@ -474,30 +539,49 @@ string APP::Exec_Cmd_AGet(string key)
 
 string APP::Exec_Cmd_ACount(string key)
 {
-    map<string,std::shared_ptr<Security_Array>>::iterator it = array_store.find(key);
+    std::shared_lock lock(*array_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_Array>>::iterator it = array_store.store.find(key);
     //未找到key
-    if( it == array_store.end()){
+    if( it == array_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     return std::to_string((*it).second->security_array.size())+"\r\n";
 }
 
 string APP::Exec_Cmd_ADelete(string key,vector<string_view> &res)
 {
+    std::unique_lock lock(*array_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
     string ret_value;
-    std::unique_lock lock(this->arr_mtx);
-    map<string,std::shared_ptr<Security_Array>>::iterator it = array_store.find(key);
+    std::map<std::string,std::shared_ptr<Security_Array>>::iterator it = array_store.store.find(key);
     //未找到key
-    if( it == array_store.end()){
+    if( it == array_store.store.end()){
         return ret_msg[RET_NO_KEY];
     }
     int count = 0;
     if(res.size()==2){
         count = it->second->security_array.size();
-        array_store.erase(it);
+        array_store.store.erase(it);
     }else{
         lock.unlock();
-        std::lock_guard s_lock(*(it->second->mtx));
+        std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+        while (!key_lock.try_lock())
+        {
+            spdlog::debug("lock failed\n");
+            std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+        }
         for (int i = 2; i < res.size(); i++)
         {
             for (vector<string>::iterator array_it = (*it).second->security_array.begin(); array_it != (*it).second->security_array.end(); array_it++)
@@ -516,9 +600,19 @@ string APP::Exec_Cmd_ADelete(string key,vector<string_view> &res)
 
 string APP::Exec_Cmd_AExist(string key, string value)
 {
-    map<string,std::shared_ptr<Security_Array>>::iterator it = array_store.find(key);
-    if( it == array_store.end()){
+    std::shared_lock lock(*array_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_Array>>::iterator it = array_store.store.find(key);
+    if( it == array_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     for (vector<string>::iterator array_it = (*it).second->security_array.begin(); array_it != (*it).second->security_array.end(); array_it++)
     {
@@ -532,13 +626,23 @@ string APP::Exec_Cmd_AExist(string key, string value)
 
 string APP::Exec_Cmd_LPUSH(string key, vector<string_view> &res)
 {
-    //使用迭代器防止减少每次从红黑树中查询的操作
-    map<string,std::shared_ptr<Security_List>>::iterator it = list_store.find(key);
-    if( it == list_store.end()){
-        std::lock_guard lock(this->list_mtx);
-        it = list_store.emplace(key,std::make_shared<Security_List>()).first;
+    std::unique_lock lock(*list_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    std::lock_guard lock(*(it->second->mtx));
+    //使用迭代器防止减少每次从红黑树中查询的操作
+    std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
+    if( it == list_store.store.end()){
+        it = list_store.store.emplace(key,std::make_shared<Security_List>()).first;
+    }
+    lock.unlock();
+
+    std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
     for(int i=2;i<res.size();i++)
     {
         (*it).second->security_list.push_front(string(res[i]));
@@ -549,13 +653,22 @@ string APP::Exec_Cmd_LPUSH(string key, vector<string_view> &res)
 
 string APP::Exec_Cmd_RPUSH(string key, vector<string_view> &res)
 {
-    //使用迭代器防止减少每次从红黑树中查询的操作
-    map<string,std::shared_ptr<Security_List>>::iterator it = list_store.find(key);
-    if( it == list_store.end()){
-        std::lock_guard lock(this->list_mtx);
-        it = list_store.emplace(key,std::make_shared<Security_List>()).first;
+    std::unique_lock lock(*list_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    std::lock_guard lock(*(it->second->mtx));
+    //使用迭代器防止减少每次从红黑树中查询的操作
+    std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
+    if( it == list_store.store.end()){
+        it = list_store.store.emplace(key,std::make_shared<Security_List>()).first;
+    }
+    lock.unlock();
+    std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
     for(int i=2;i<res.size();i++)
     {
         (*it).second->security_list.push_back(string(res[i]));
@@ -566,10 +679,20 @@ string APP::Exec_Cmd_RPUSH(string key, vector<string_view> &res)
 
 string APP::Exec_Cmd_LGet(string key)
 {
-    map<string,std::shared_ptr<Security_List>>::iterator it = list_store.find(key);
+    std::shared_lock lock(*list_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
     //未找到key
-    if( it == list_store.end()){
+    if( it == list_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     string ret_value;
     for(list<string>::iterator list_it=(*it).second->security_list.begin();list_it!=(*it).second->security_list.end();list_it++)
@@ -581,29 +704,48 @@ string APP::Exec_Cmd_LGet(string key)
 
 string APP::Exec_Cmd_LCount(string key)
 {
-    map<string,std::shared_ptr<Security_List>>::iterator it = list_store.find(key);
+    std::shared_lock lock(*list_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
     //未找到key
-    if( it == list_store.end()){
+    if( it == list_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     return std::to_string((*it).second->security_list.size())+"\r\n";
 }
 
 string APP::Exec_Cmd_LDelete(string key, vector<string_view> &res)
 {
-    map<string,std::shared_ptr<Security_List>>::iterator it = list_store.find(key);
-    std::unique_lock lock(this->list_mtx);
+    std::unique_lock lock(*list_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
     //未找到key
-    if( it == list_store.end()){
+    if( it == list_store.store.end()){
         return ret_msg[RET_NO_KEY];
     }
     int count=0;
     if(res.size() == 2){
         count=(*it).second->security_list.size();
-        list_store.erase(it);
+        list_store.store.erase(it);
     }else{
         lock.unlock();
-        std::lock_guard s_lock(*(it->second->mtx));
+        std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+        while (!key_lock.try_lock())
+        {
+            spdlog::debug("lock failed\n");
+            std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+        }
         for (int i = 2; i < res.size(); i++)
         {
             for (list<string>::iterator list_it = (*it).second->security_list.begin(); list_it != (*it).second->security_list.end(); list_it++)
@@ -622,9 +764,19 @@ string APP::Exec_Cmd_LDelete(string key, vector<string_view> &res)
 
 string APP::Exec_Cmd_LExist(string key, string value)
 {
-    map<string,std::shared_ptr<Security_List>>::iterator it = list_store.find(key);
-    if( it == list_store.end()){
+    std::shared_lock lock(*list_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
+    if( it == list_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     for (list<string>::iterator list_it = (*it).second->security_list.begin(); list_it != (*it).second->security_list.end(); list_it++)
     {
@@ -638,13 +790,22 @@ string APP::Exec_Cmd_LExist(string key, string value)
 
 string APP::Exec_Cmd_RSet(string key,vector<string_view> &res)
 {
-    //使用迭代器防止减少每次从红黑树中查询的操作
-    map<string,std::shared_ptr<Security_RBtree>>::iterator it = rbtree_store.find(key);
-    if( it == rbtree_store.end()){
-        std::lock_guard lock(this->rbtree_mtx);
-        it = rbtree_store.emplace(key,std::make_shared<Security_RBtree>()).first;
+    std::unique_lock lock(*rbtree_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    std::lock_guard lock(*(it->second->mtx));
+    //使用迭代器防止减少每次从红黑树中查询的操作
+    std::map<std::string,std::shared_ptr<Security_RBtree>>::iterator it = rbtree_store.store.find(key);
+    if( it == rbtree_store.store.end()){
+        it = rbtree_store.store.emplace(key,std::make_shared<Security_RBtree>()).first;
+    }
+    lock.unlock();
+    std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
     for(int i=2;i<res.size();i += 2){
         it->second->security_rbtree[string(res[i])] = string(res[i+1]);
     }
@@ -653,11 +814,21 @@ string APP::Exec_Cmd_RSet(string key,vector<string_view> &res)
 
 string APP::Exec_Cmd_RGet(string key,string field)
 {
-    map<string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.find(key);
-    if(it == rbtree_store.end()){
+    std::shared_lock lock(*rbtree_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.store.find(key);
+    if(it == rbtree_store.store.end()){
         return ret_msg[RET_NO_KEY];
     }
-    map<string,string>::iterator rb_it=(*it).second->security_rbtree.find(field);
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,string>::iterator rb_it=(*it).second->security_rbtree.find(field);
     if(rb_it == (*it).second->security_rbtree.end()){
         return ret_msg[RET_NO_FIELD];
     }
@@ -666,27 +837,46 @@ string APP::Exec_Cmd_RGet(string key,string field)
 
 string APP::Exec_Cmd_RCount(string key)
 {
-    map<string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.find(key);
-    if(it == rbtree_store.end()){
+    std::shared_lock lock(*rbtree_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.store.find(key);
+    if(it == rbtree_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     return std::to_string((*it).second->security_rbtree.size())+"\r\n";
 }
 
 string APP::Exec_Cmd_RDelete(string key,vector<string_view> &res)
 {
-    map<string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.find(key);
-    if(it == rbtree_store.end()){
+    std::unique_lock lock(*rbtree_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.store.find(key);
+    if(it == rbtree_store.store.end()){
         return ret_msg[RET_NO_KEY];
     }
-    std::unique_lock lock(this->rbtree_mtx);
     int count=0;
     if(res.size()==2){
         count=(*it).second->security_rbtree.size();
-        rbtree_store.erase(it);
+        rbtree_store.store.erase(it);
     }else{
         lock.unlock();
-        std::lock_guard s_lock(*(it->second->mtx));
+        std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+        while (!key_lock.try_lock())
+        {
+            spdlog::debug("lock failed\n");
+            std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+        }
         for(int i=2;i<res.size();i++)
         {
             if((*it).second->security_rbtree.find(string(res[i]))!=(*it).second->security_rbtree.end()){
@@ -700,9 +890,19 @@ string APP::Exec_Cmd_RDelete(string key,vector<string_view> &res)
 
 string APP::Exec_Cmd_RExist(string key, string field)
 {
-    map<string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.find(key);
-    if(it == rbtree_store.end()){
+    std::shared_lock lock(*rbtree_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.store.find(key);
+    if(it == rbtree_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     if((*it).second->security_rbtree.find(field)==(*it).second->security_rbtree.end()){
         return ret_msg[RET_NOT_EXIST];
@@ -712,12 +912,21 @@ string APP::Exec_Cmd_RExist(string key, string field)
 
 string APP::Exec_Cmd_SSet(string key, vector<string_view> &res)
 {
-    map<string,std::shared_ptr<Security_Set>>::iterator it = set_store.find(key);
-    if( it == set_store.end()){
-        std::lock_guard lock(this->rbtree_mtx);
-        it = set_store.emplace(key,std::make_shared<Security_Set>()).first;
+    std::unique_lock lock(*set_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    std::lock_guard lock(*(it->second->mtx));
+    std::map<std::string,std::shared_ptr<Security_Set>>::iterator it = set_store.store.find(key);
+    if( it == set_store.store.end()){
+        it = set_store.store.emplace(key,std::make_shared<Security_Set>()).first;
+    }
+    lock.unlock();
+    std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
     for(int i=2;i<res.size();i++)
     {
         it->second->security_set.insert(string(res[i]));
@@ -727,10 +936,20 @@ string APP::Exec_Cmd_SSet(string key, vector<string_view> &res)
 
 string APP::Exec_Cmd_SGet(string key)
 {
-    map<string,std::shared_ptr<Security_Set>>::iterator it = set_store.find(key);
+    std::shared_lock lock(*set_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_Set>>::iterator it = set_store.store.find(key);
     //未找到key
-    if( it == set_store.end()){
+    if( it == set_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     string ret_value;
     for(unordered_set<string>::iterator set_it = (*it).second->security_set.begin();set_it!=(*it).second->security_set.end();set_it++){
@@ -741,30 +960,49 @@ string APP::Exec_Cmd_SGet(string key)
 
 string APP::Exec_Cmd_SCount(string key)
 {
-    map<string,std::shared_ptr<Security_Set>>::iterator it = set_store.find(key);
+    std::shared_lock lock(*set_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_Set>>::iterator it = set_store.store.find(key);
     //未找到key
-    if( it == set_store.end()){
+    if( it == set_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     return std::to_string((*it).second->security_set.size())+"\r\n";
 }
 
 string APP::Exec_Cmd_SDelete(string key, vector<string_view> &res)
 {
+    std::unique_lock lock(*set_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
     string ret_value;
-    map<string,std::shared_ptr<Security_Set>>::iterator it = set_store.find(key);
+    std::map<std::string,std::shared_ptr<Security_Set>>::iterator it = set_store.store.find(key);
     //未找到key
-    if( it == set_store.end()){
+    if( it == set_store.store.end()){
         return ret_msg[RET_NO_KEY];
     }
-    std::unique_lock lock(this->set_mtx);
     int count = 0;
     if(res.size()==2){
         count = (*it).second->security_set.size();
-        set_store.erase(it);
+        set_store.store.erase(it);
     }else{
         lock.unlock();
-        std::lock_guard s_lock(*(it->second->mtx));
+        std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+        while (!key_lock.try_lock())
+        {
+            spdlog::debug("lock failed\n");
+            std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+        }
         unordered_set<string>::iterator set_it;
         for (int i = 2; i < res.size(); i++)
         {
@@ -780,9 +1018,19 @@ string APP::Exec_Cmd_SDelete(string key, vector<string_view> &res)
 
 string APP::Exec_Cmd_SExist(string key, string value)
 {
-    map<string,std::shared_ptr<Security_Set>>::iterator it = set_store.find(key);
-    if( it == set_store.end()){
+    std::shared_lock lock(*set_store.mtx,std::defer_lock);
+    while(!lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    std::map<std::string,std::shared_ptr<Security_Set>>::iterator it = set_store.store.find(key);
+    if( it == set_store.store.end()){
         return ret_msg[RET_NO_KEY];
+    }
+    std::shared_lock key_lock(*it->second->mtx,std::defer_lock);
+    while(!key_lock.try_lock()){
+        spdlog::debug("lock failed\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     unordered_set<string>::iterator set_it = (*it).second->security_set.find(value);
     if(set_it==(*it).second->security_set.end()){

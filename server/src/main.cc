@@ -53,7 +53,7 @@ int main(int argc,char*argv[])
         if (ret == -1)
             exit(-1);
     }
-    APP app(port,backlog,thread_num,event_num,per_max_buffer_size); 
+    APP app(port,backlog,thread_num,event_num,per_max_buffer_size,100); 
     //app.Init(atoi(argv[1]),MAX_CONN_NUM);
     app.Run();
     return 0;

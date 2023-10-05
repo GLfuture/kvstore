@@ -1,14 +1,13 @@
 /*
- * @Description: 
+ * @Description:
  * @Version: 1.0
  * @Author: Gong
  * @Date: 2023-10-01 06:10:54
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-03 07:39:12
+ * @LastEditTime: 2023-10-05 05:18:39
  */
 
 #pragma once
-#include <mutex>
 #include <string>
 #include <future>
 #include <vector>
@@ -16,95 +15,193 @@
 #include <map>
 #include <unordered_set>
 #include <memory>
-
-
-
-class Security_String
+#include <atomic>
+#include <condition_variable>
+#include <shared_mutex>
+class Security_Base
 {
 public:
-    Security_String(){
-        mtx = std::make_shared<std::mutex>();
+    Security_Base()
+    {
+        mtx = std::make_shared<std::shared_mutex>();
     }
-    Security_String(const Security_String&& other){
+    std::shared_ptr<std::shared_mutex> mtx;
+};
+
+class Security_String : public Security_Base
+{
+public:
+    Security_String() : Security_Base()
+    {
+    }
+
+    Security_String(const Security_String &&other)
+    {
         this->mtx = std::move(other.mtx);
         this->security_string = std::move(other.security_string);
     }
-    Security_String(const Security_String*& other){
+    Security_String(const Security_String *&other)
+    {
         this->mtx = std::move(other->mtx);
         this->security_string = std::move(other->security_string);
     }
     std::string security_string;
-    std::shared_ptr<std::mutex> mtx;
 };
 
-class Security_Array
+class Security_Array : public Security_Base
 {
 public:
-    Security_Array(){
-        mtx = std::make_shared<std::mutex>();
+    Security_Array() : Security_Base()
+    {
     }
-    Security_Array(const Security_Array&& other){
+    Security_Array(const Security_Array &&other)
+    {
+
         this->mtx = std::move(other.mtx);
         this->security_array = std::move(other.security_array);
     }
-    Security_Array(const Security_Array*& other){
+    Security_Array(const Security_Array *&other)
+    {
+
         this->mtx = std::move(other->mtx);
         this->security_array = std::move(other->security_array);
     }
-    std::shared_ptr<std::mutex> mtx;
     std::vector<std::string> security_array;
 };
 
-class Security_List
+class Security_List : public Security_Base
 {
 public:
-    Security_List(){
-        mtx = std::make_shared<std::mutex>();
+    Security_List() : Security_Base()
+    {
     }
-    Security_List(const Security_List&& other){
+    Security_List(const Security_List &&other)
+    {
+
         this->mtx = std::move(other.mtx);
         this->security_list = std::move(other.security_list);
     }
-    Security_List(const Security_List*& other){
+    Security_List(const Security_List *&other)
+    {
+
         this->mtx = std::move(other->mtx);
         this->security_list = std::move(other->security_list);
     }
-    std::shared_ptr<std::mutex> mtx;
     std::list<std::string> security_list;
 };
 
-class Security_RBtree
+class Security_RBtree : public Security_Base
 {
 public:
-    Security_RBtree(){
-        mtx = std::make_shared<std::mutex>();
+    Security_RBtree() : Security_Base()
+    {
     }
-    Security_RBtree(const Security_RBtree&& other){
+    Security_RBtree(const Security_RBtree &&other)
+    {
+
         this->mtx = std::move(other.mtx);
         this->security_rbtree = std::move(other.security_rbtree);
     }
-    Security_RBtree(const Security_RBtree*& other){
+    Security_RBtree(const Security_RBtree *&other)
+    {
+
         this->mtx = std::move(other->mtx);
         this->security_rbtree = std::move(other->security_rbtree);
     }
-    std::shared_ptr<std::mutex> mtx;
-    std::map<std::string,std::string> security_rbtree;
+    std::map<std::string, std::string> security_rbtree;
 };
 
-class Security_Set
+class Security_Set : public Security_Base
 {
 public:
-    Security_Set(){
-        mtx = std::make_shared<std::mutex>();
+    Security_Set() : Security_Base()
+    {
     }
-    Security_Set(const Security_Set&& other){
+    Security_Set(const Security_Set &&other)
+    {
+
         this->mtx = std::move(other.mtx);
         this->security_set = std::move(other.security_set);
     }
-    Security_Set(const Security_Set*& other){
+    Security_Set(const Security_Set *&other)
+    {
+
         this->mtx = std::move(other->mtx);
         this->security_set = std::move(other->security_set);
     }
-    std::shared_ptr<std::mutex> mtx;
     std::unordered_set<std::string> security_set;
+};
+
+class Map_Security_String_Store : public Security_Base
+{
+public:
+    Map_Security_String_Store() : Security_Base()
+    {
+    }
+    Map_Security_String_Store(const Map_Security_String_Store &&other)
+    {
+
+        this->mtx = std::move(other.mtx);
+        this->store = std::move(other.store);
+    }
+    std::map<std::string, std::shared_ptr<Security_String>> store;
+};
+
+class Map_Security_Array_Store : public Security_Base
+{
+public:
+    Map_Security_Array_Store() : Security_Base()
+    {
+    }
+    Map_Security_Array_Store(const Map_Security_Array_Store &&other)
+    {
+
+        this->mtx = std::move(other.mtx);
+        this->store = std::move(other.store);
+    }
+    std::map<std::string, std::shared_ptr<Security_Array>> store;
+};
+
+class Map_Security_List_Store : public Security_Base
+{
+public:
+    Map_Security_List_Store() : Security_Base()
+    {
+    }
+    Map_Security_List_Store(const Map_Security_List_Store &&other)
+    {
+
+        this->mtx = std::move(other.mtx);
+        this->store = std::move(other.store);
+    }
+    std::map<std::string, std::shared_ptr<Security_List>> store;
+};
+
+class Map_Security_RBtree_Store : public Security_Base
+{
+public:
+    Map_Security_RBtree_Store() : Security_Base()
+    {
+    }
+    Map_Security_RBtree_Store(const Map_Security_RBtree_Store &&other)
+    {
+
+        this->mtx = std::move(other.mtx);
+        this->store = std::move(other.store);
+    }
+    std::map<std::string, std::shared_ptr<Security_RBtree>> store;
+};
+
+class Map_Security_Set_Store : public Security_Base
+{
+public:
+    Map_Security_Set_Store() : Security_Base()
+    {
+    }
+    Map_Security_Set_Store(const Map_Security_Set_Store &&other)
+    {
+        this->mtx = std::move(other.mtx);
+        this->store = std::move(other.store);
+    }
+    std::map<std::string, std::shared_ptr<Security_Set>> store;
 };

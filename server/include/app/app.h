@@ -5,6 +5,7 @@
 #include "../network/netlib.h"
 #include "../thread_pool/ThreadPool.hpp"
 #include "../split/split.hpp"
+#include "../spdlog/spdlog.h"
 #include "security.h"
 #include <queue>
 #include <unordered_set>
@@ -117,8 +118,9 @@ class APP
 public:
     using Server_Ptr = std::shared_ptr<Server>;
     using Tcp_Conn_Ptr = std::shared_ptr<Tcp_Conn>;
-    APP(uint16_t port,uint16_t backlog,uint8_t thread_num,uint32_t event_num,uint32_t buffer_size)
+    APP(uint16_t port,uint16_t backlog,uint8_t thread_num,uint32_t event_num,uint32_t buffer_size,int64_t wait_for_lock_millisec)
     {
+        wait_lock_millisec = wait_for_lock_millisec;
         R = new Reactor(event_num);
         Init(port,backlog,thread_num,buffer_size);
     }
@@ -184,20 +186,15 @@ private:
 
     ThreadPool th_pool; // 线程池
     Reactor *R;       
+    int64_t wait_lock_millisec;
 
-    map<string,std::shared_ptr<Security_String>> string_store;//string存储
-    std::mutex str_mtx;
+    Map_Security_String_Store string_store;//string存储
+    
+    Map_Security_Array_Store array_store;//array存储
 
-    map<string,std::shared_ptr<Security_Array>> array_store;//array存储
-    std::mutex arr_mtx;
+    Map_Security_List_Store list_store;//list存储
 
-    map<string,std::shared_ptr<Security_List>> list_store;//list存储
-    std::mutex list_mtx;
+    Map_Security_RBtree_Store rbtree_store;//rbtree存储
 
-    map<string,std::shared_ptr<Security_RBtree>> rbtree_store;//rbtree存储
-    std::mutex rbtree_mtx;
-
-    map<string,std::shared_ptr<Security_Set>> set_store;//set存储
-    std::mutex set_mtx;
-
+    Map_Security_Set_Store set_store;//set存储
 };
