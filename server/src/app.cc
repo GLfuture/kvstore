@@ -2,103 +2,18 @@
 #include <cstdint>
 
 /**
- * @description: 接收连接触发回调
- * @param {Reactor} *R
- * @param {Server_Ptr} server
- * @return void
- * @author: Gong
- */
-void Accept_cb(Reactor *R, APP::Server_Ptr server)
-{
-    int clinetfd = server->Accept();
-    APP::Tcp_Conn_Ptr conn = std::make_shared<Tcp_Conn>(clinetfd);
-    server->Add_Conn(conn);
-    R->Add_Reactor(clinetfd, EPOLLIN);
-}
-/**
- * @description: 读事件触发回调
- * @param {APP} *app            //主应用程序,包含业务层
- * @param {Reactor} *R          //Reactor，管理连接
- * @param {Server_Ptr} server   //server的指针
- * @param {ThreadPool} &th_pool //线程池,用于并发处理协议
- * @return void
- * @author: Gong
- */
-void Read_cb(APP *app , Reactor *R, APP::Server_Ptr server, ThreadPool &th_pool)
-{
-    int clientfd = R->Get_Now_Event().data.fd;
-    APP::Tcp_Conn_Ptr conn = std::dynamic_pointer_cast<Tcp_Conn>(server->Get_Conn(clientfd));
-    int proto_len = 0;
-    int len = server->Recv_Len<int>(conn,proto_len);
-    if (len <= 0)
-    {
-        R->Del_Reactor(clientfd, EPOLLIN);
-        server->Close(clientfd);
-        return;
-    }
-    proto_len=ntohl(proto_len);
-    len = server->Recv(conn,proto_len);
-    if(len <= 0){
-        R->Del_Reactor(clientfd,EPOLLIN);
-        server->Close(clientfd);
-        return;
-    }
-    std::future<string> res = th_pool.exec(std::bind(&APP::Work,app,conn));
-    std::shared_future<string> share_res=res.share();
-    conn->Add_Future(share_res);
-    R->Mod_Reactor(clientfd,EPOLLOUT);
-}
-
-//定时触发，找到
-void Time_cb()
-{
-
-}
-
-/**
- * @description: 写事件触发回调
- * @param {APP} *app            //主应用程序,包含业务层
- * @param {Reactor} *R          //Reactor，管理连接
- * @param {Server_Ptr} server   //server的指针
- * @param {ThreadPool} &th_pool //线程池,用于并发处理协议
- * @return void
- * @author: Gong
- */
-
-
-void Write_cb(APP *app , Reactor *R, APP::Server_Ptr server, ThreadPool &th_pool)
-{
-    int clientfd = R->Get_Now_Event().data.fd;
-    APP::Tcp_Conn_Ptr conn = std::dynamic_pointer_cast<Tcp_Conn>(server->Get_Conn(clientfd));
-    string res;
-    while(!conn->Has_Finished_Future()){
-    };
-    res = conn->Get_An_Finish_Task();
-    if(!res.empty()){
-        conn->Appand_Wbuffer(res);
-        server->Send(conn, conn->Get_Wbuffer_Length());
-        conn->Erase_Wbuffer(conn->Get_Wbuffer_Length());
-    }
-    R->Mod_Reactor(clientfd,EPOLLIN);
-}
-/**
  * @description: 初始化应用
  * @return {*}
  * @author: Gong
  */
 
-int APP::Init(uint16_t port,uint16_t backlog,uint8_t thread_num,uint32_t per_max_rcv_size)
+int APP::Init_cb(std::function<void()> &accept_cb, std::function<void()> &read_cb, std::function<void()> &write_cb
+    , std::function<void()> &exit_cb)
 {
-    th_pool.Create(thread_num);
-    Server_Ptr server = std::make_shared<Server>();
-    R->Add_Server(server);
-    server->Bind(port);
-    server->Listen(backlog);
-    R->Set_No_Block(server->Get_Sock());
-    R->Add_Reactor(server->Get_Sock(),EPOLLIN);
-    R->Set_Accept_cb(std::bind(Accept_cb, R, server));
-    R->Set_Read_cb(std::bind(Read_cb, this, R, server, std::ref(th_pool)));
-    R->Set_Write_cb(std::bind(Write_cb, this, R, server, std::ref(th_pool)));
+    R->Set_Accept_cb(std::move(accept_cb));
+    R->Set_Read_cb(std::move(read_cb));
+    R->Set_Write_cb(std::move(write_cb));
+    R->Set_Exit_cb(std::move(exit_cb));
     return 0;
 }
 
@@ -108,49 +23,74 @@ int APP::Init(uint16_t port,uint16_t backlog,uint8_t thread_num,uint32_t per_max
  * @return string
  * @author: Gong
  */
-string APP::Decode(string buffer)
+string APP::Decode(Msg& msg)
 {
-    Split split(buffer);
+    Split split(msg.buffer);
     if(!split.Spilt_With_Char_Connect_With_Quote(' ')){
         return ret_msg[RET_STR_ERROR];
     }
     vector<string_view> res = split.Get_Result();
-    string ret_info="";
+    string ret_info = ret_msg[RET_NULL];
     int i;
     for(i = CMD_BEG ; i < CMD_END ; i++)
     {
         if(res[0].compare(cmds[i]) == 0){
-            if(i <= CMD_EXIST)
-                ret_info = Decode_String(i,res);
-            else if(i<=CMD_AEXIST)
-                ret_info = Decode_Array(i,res);
-            else if(i<=CMD_LEXIST)
-                ret_info = Decode_List(i,res);
-            else if(i<=CMD_REXIST)
-                ret_info = Decode_Rbtree(i,res);
-            else if(i<=CMD_SEXIST)
-                ret_info = Decode_Set(i,res);
-            //else if(i == CMD_EVENTBEG)
-                //未实现
-                
+            if(!msg.Event_Start->load()){
+                if (i <= CMD_EXIST)
+                    ret_info = Decode_String(msg,i, res);
+                else if (i <= CMD_AEXIST)
+                    ret_info = Decode_Array(msg,i, res);
+                else if (i <= CMD_LEXIST)
+                    ret_info = Decode_List(msg,i, res);
+                else if (i <= CMD_REXIST)
+                    ret_info = Decode_Rbtree(msg,i, res);
+                else if (i <= CMD_SEXIST)
+                    ret_info = Decode_Set(msg,i, res);
+                else if(i == CMD_EVENTBEG)
+                    ret_info = Exec_Cmd_Eevent_Beg(msg);
+                else if(i == CMD_ROLLBACK)
+                    ret_info = Exec_Cmd_RollBack(msg);
+            }else{
+                if(i == CMD_EVENTEND)
+                    ret_info = Exec_Cmd_End(msg);
+                else if(i == CMD_ROLLBACK)
+                    ret_info = ret_msg[RET_CMD_ERROR];
+                else 
+                    affairs[msg.fd]->Ready_Add_Cmd(msg.buffer);
+            }
             break;
         }
     }
-    if(i==CMD_END) ret_info=ret_msg[RET_CMD_ERROR];
+    if(i == CMD_END) ret_info=ret_msg[RET_CMD_ERROR];
+    //std::cout<<ret_info<<" len :"<<ret_info.length()<<std::endl;
     return ret_info;
 }
 
 
-string APP::Work(APP::Tcp_Conn_Ptr& conn)
+void APP::Deal_Closed_Conn(Tcp_Conn_Ptr &conn_ptr,uint32_t event)
 {
-    //解析协议 //此处应重新实现以防TCP粘包
-    string buffer(conn->Get_Rbuffer()); 
-    string res = Decode(buffer);
-    conn->Erase_Rbuffer(conn->Get_Rbuffer_Length());
+    R->Del_Reactor(conn_ptr->Get_Conn_fd(), event);
+    Server_Ptr server = std::dynamic_pointer_cast<Server>(R->Get_Server());
+    server->Finish_All_Future_Before_Del_Conn(conn_ptr);
+    affairs.erase(conn_ptr->Get_Conn_fd());
+}
+
+
+Reactor::Timer_Ptr APP::Add_Time_Out_cb(uint16_t timerid, uint64_t interval_time, Timer::TimerType type, function<void()> &&timeout_cb) 
+{
+    return R->Set_Timeout_cb(timerid,interval_time, type,std::move(timeout_cb));
+}
+
+string APP::Work(APP::Tcp_Conn_Ptr& conn_ptr)
+{
+    string res="";
+    Msg msg(conn_ptr->Get_Conn_fd(),string(conn_ptr->Get_Rbuffer()),conn_ptr->Get_Affairs_Status());
+    res = Decode(msg);
+    conn_ptr->Erase_Rbuffer(conn_ptr->Get_Rbuffer_Length());
     return res;
 }
 
-string APP::Decode_String(int cmd_type, vector<string_view> &res)
+string APP::Decode_String(Msg& msg,int cmd_type, vector<string_view> &res)
 {
     string ret_info;
     switch (cmd_type)
@@ -158,7 +98,7 @@ string APP::Decode_String(int cmd_type, vector<string_view> &res)
         case CMD_SET:
         {
             if(res.size() != 3)   return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_Set(string(res[1]),string(res[2]));
+            ret_info = Exec_Cmd_Set(msg,string(res[1]),string(res[2]));
             return ret_info;
         }
         case CMD_GET:
@@ -182,7 +122,7 @@ string APP::Decode_String(int cmd_type, vector<string_view> &res)
         case CMD_DELETE:
         {
             if(res.size() != 2)  return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_Delete(string(res[1]));
+            ret_info = Exec_Cmd_Delete(msg,string(res[1]));
             return ret_info;
         }
         case CMD_EXIST:
@@ -197,7 +137,7 @@ string APP::Decode_String(int cmd_type, vector<string_view> &res)
     return ret_info;
 }
 
-string APP::Decode_Array(int cmd_type, vector<string_view> &res)
+string APP::Decode_Array(Msg& msg,int cmd_type, vector<string_view> &res)
 {
     string ret_info;
     switch (cmd_type)
@@ -223,7 +163,7 @@ string APP::Decode_Array(int cmd_type, vector<string_view> &res)
         case CMD_ADELETE:
         {
             if(res.size() < 2)  return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_ADelete(string(res[1]),res);
+            ret_info = Exec_Cmd_ADelete(msg,string(res[1]),res);
             return ret_info;
         }
         case CMD_AEXIST:
@@ -238,7 +178,7 @@ string APP::Decode_Array(int cmd_type, vector<string_view> &res)
     return ret_info;
 }
 
-string APP::Decode_List(int cmd_type, vector<string_view> &res)
+string APP::Decode_List(Msg& msg,int cmd_type, vector<string_view> &res)
 {
     string ret_info;
     switch (cmd_type)
@@ -270,7 +210,7 @@ string APP::Decode_List(int cmd_type, vector<string_view> &res)
         case CMD_LDELETE:
         {
             if(res.size() < 2)  return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_LDelete(string(res[1]),res);
+            ret_info = Exec_Cmd_LDelete(msg,string(res[1]),res);
             return ret_info;
         }
         case CMD_LEXIST:
@@ -285,7 +225,7 @@ string APP::Decode_List(int cmd_type, vector<string_view> &res)
     return ret_info;
 }
 
-string APP::Decode_Rbtree(int cmd_type, vector<string_view> &res)
+string APP::Decode_Rbtree(Msg& msg,int cmd_type, vector<string_view> &res)
 {
     string ret_info;
     switch (cmd_type)
@@ -315,7 +255,7 @@ string APP::Decode_Rbtree(int cmd_type, vector<string_view> &res)
         {
             if (res.size() < 2)
             return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_RDelete(string(res[1]),res);
+            ret_info = Exec_Cmd_RDelete(msg,string(res[1]),res);
             return ret_info;
         }
         case CMD_REXIST:
@@ -331,7 +271,7 @@ string APP::Decode_Rbtree(int cmd_type, vector<string_view> &res)
     return ret_info;
 }
 
-string APP::Decode_Set(int cmd_type, vector<string_view> &res)
+string APP::Decode_Set(Msg& msg,int cmd_type, vector<string_view> &res)
 {
     string ret_info;
     switch (cmd_type)
@@ -360,7 +300,7 @@ string APP::Decode_Set(int cmd_type, vector<string_view> &res)
         {
             if (res.size() < 2)
             return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_SDelete(string(res[1]),res);
+            ret_info = Exec_Cmd_SDelete(msg,string(res[1]),res);
             return ret_info;
         }
         case CMD_SEXIST:
@@ -376,8 +316,9 @@ string APP::Decode_Set(int cmd_type, vector<string_view> &res)
     return ret_info;
 }
 
-string APP::Exec_Cmd_Set(string key, string value)
+string APP::Exec_Cmd_Set(Msg& msg, string key, string value)
 {
+    //std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*string_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -456,8 +397,9 @@ string APP::Exec_Cmd_Len(string key)
     return std::to_string(it->second->security_string.length())+"\r\n";
 }
 
-string APP::Exec_Cmd_Delete(string key)
+string APP::Exec_Cmd_Delete(Msg& msg,string key)
 {
+    //std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*string_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -487,6 +429,7 @@ string APP::Exec_Cmd_Exist(string key)
 
 string APP::Exec_Cmd_ASet(string key,vector<string_view> &res)
 {
+    //std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*array_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -557,8 +500,9 @@ string APP::Exec_Cmd_ACount(string key)
     return std::to_string((*it).second->security_array.size())+"\r\n";
 }
 
-string APP::Exec_Cmd_ADelete(string key,vector<string_view> &res)
+string APP::Exec_Cmd_ADelete(Msg& msg,string key,vector<string_view> &res)
 {
+    //std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*array_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -594,6 +538,11 @@ string APP::Exec_Cmd_ADelete(string key,vector<string_view> &res)
                 }
             }
         }
+        if(it->second->security_array.empty()){
+        lock.lock();
+        it = array_store.store.erase(it);
+        lock.unlock();
+    }
     }
     return std::to_string(count)+"\r\n";
 }
@@ -722,8 +671,9 @@ string APP::Exec_Cmd_LCount(string key)
     return std::to_string((*it).second->security_list.size())+"\r\n";
 }
 
-string APP::Exec_Cmd_LDelete(string key, vector<string_view> &res)
+string APP::Exec_Cmd_LDelete(Msg& msg,string key, vector<string_view> &res)
 {
+    //std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*list_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -736,7 +686,7 @@ string APP::Exec_Cmd_LDelete(string key, vector<string_view> &res)
     }
     int count=0;
     if(res.size() == 2){
-        count=(*it).second->security_list.size();
+        count = (*it).second->security_list.size();
         list_store.store.erase(it);
     }else{
         lock.unlock();
@@ -758,6 +708,11 @@ string APP::Exec_Cmd_LDelete(string key, vector<string_view> &res)
                 }
             }
         }
+        if(it->second->security_list.empty()){
+        lock.lock();
+        it = list_store.store.erase(it);
+        lock.unlock();
+    }
     }
     return std::to_string(count)+"\r\n";
 }
@@ -790,6 +745,7 @@ string APP::Exec_Cmd_LExist(string key, string value)
 
 string APP::Exec_Cmd_RSet(string key,vector<string_view> &res)
 {
+    //std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*rbtree_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -854,8 +810,9 @@ string APP::Exec_Cmd_RCount(string key)
     return std::to_string((*it).second->security_rbtree.size())+"\r\n";
 }
 
-string APP::Exec_Cmd_RDelete(string key,vector<string_view> &res)
+string APP::Exec_Cmd_RDelete(Msg& msg,string key,vector<string_view> &res)
 {
+    //std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*rbtree_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -867,7 +824,7 @@ string APP::Exec_Cmd_RDelete(string key,vector<string_view> &res)
     }
     int count=0;
     if(res.size()==2){
-        count=(*it).second->security_rbtree.size();
+        count = (*it).second->security_rbtree.size();
         rbtree_store.store.erase(it);
     }else{
         lock.unlock();
@@ -883,6 +840,12 @@ string APP::Exec_Cmd_RDelete(string key,vector<string_view> &res)
                 (*it).second->security_rbtree.erase(string(res[i]));
                 count++;
             }
+        }
+        if (it->second->security_rbtree.empty())
+        {
+            lock.lock();
+            it = rbtree_store.store.erase(it);
+            lock.unlock();
         }
     }
     return std::to_string(count)+"\r\n";
@@ -912,6 +875,7 @@ string APP::Exec_Cmd_RExist(string key, string field)
 
 string APP::Exec_Cmd_SSet(string key, vector<string_view> &res)
 {
+    //std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*set_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -978,8 +942,9 @@ string APP::Exec_Cmd_SCount(string key)
     return std::to_string((*it).second->security_set.size())+"\r\n";
 }
 
-string APP::Exec_Cmd_SDelete(string key, vector<string_view> &res)
+string APP::Exec_Cmd_SDelete(Msg& msg,string key, vector<string_view> &res)
 {
+    //std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*set_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -1012,6 +977,12 @@ string APP::Exec_Cmd_SDelete(string key, vector<string_view> &res)
                 count++;
             }
         }
+        if (it->second->security_set.empty())
+        {
+            lock.lock();
+            it = set_store.store.erase(it);
+            lock.unlock();
+        }
     }
     return std::to_string(count)+"\r\n";
 }
@@ -1037,4 +1008,56 @@ string APP::Exec_Cmd_SExist(string key, string value)
         return ret_msg[RET_NOT_EXIST];
     }
     return ret_msg[RET_EXIST];
+}
+
+string APP::Exec_Cmd_Eevent_Beg(Msg& msg)
+{
+    BackUp();
+    msg.Event_Start->store(true);
+    affairs.emplace(msg.fd,std::make_shared<Affairs>());
+    return ret_msg[RET_NULL];
+}
+
+void APP::BackUp()
+{
+    //std::unique_lock lock(*back_store.mtx);
+    back_store.array_store = array_store.store;
+    back_store.list_store = list_store.store;
+    back_store.rbtree_store = rbtree_store.store;
+    back_store.set_store = set_store.store;
+    back_store.string_store = string_store.store;
+}
+
+string APP::Exec_Cmd_End(Msg& msg)
+{
+    //防止死锁
+    //std::unique_lock lock(*back_store.mtx);
+    msg.Event_Start->store(false);
+    std::map<uint32_t,Affair_Ptr>::iterator it = affairs.find(msg.fd);
+    while(!it->second->ready_cmds->seurity_queue.empty()){
+        std::string cmd = it->second->Get_An_Cmd();
+        //std::cout<<"cmd : "<<cmd<<std::endl;
+        Msg temp_msg(msg.fd,cmd,msg.Event_Start);
+        std::string ret = Decode(temp_msg);
+        if(ret == ret_msg[RET_STR_ERROR] || ret==ret_msg[RET_ARG_ERROR] || ret==ret_msg[RET_CMD_ERROR] 
+            || ret==ret_msg[RET_NO_KEY] || ret== ret_msg[RET_NO_FIELD]){
+            Exec_Cmd_RollBack(msg);
+            affairs.erase(it);
+            std::cout << std::string(cmd + " : ") + ret <<std::endl;
+            return std::string(cmd + " : ") + ret;
+        }
+    }
+    affairs.erase(it);
+    return ret_msg[RET_OK];
+}
+
+string APP::Exec_Cmd_RollBack(Msg &msg)
+{
+    //std::unique_lock lock(*back_store.mtx);
+    array_store.store = back_store.array_store;
+    list_store.store = back_store.list_store;
+    rbtree_store.store = back_store.rbtree_store;
+    set_store.store = back_store.set_store;
+    string_store.store = back_store.string_store;
+    return ret_msg[RET_OK];
 }

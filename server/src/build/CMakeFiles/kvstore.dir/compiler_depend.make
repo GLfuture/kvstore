@@ -314,11 +314,8 @@ CMakeFiles/kvstore.dir/app.cc.o: /home/gong/projects/kvstore/server/src/app.cc \
   /usr/include/linux/falloc.h \
   /usr/include/x86_64-linux-gnu/bits/stat.h \
   /usr/include/x86_64-linux-gnu/bits/struct_stat.h \
-  /usr/include/c++/12/queue \
-  /usr/include/c++/12/deque \
-  /usr/include/c++/12/bits/stl_deque.h \
-  /usr/include/c++/12/bits/deque.tcc \
-  /usr/include/c++/12/bits/stl_queue.h \
+  /home/gong/projects/kvstore/server/include/protocol/protocol.hpp \
+  /home/gong/projects/kvstore/server/include/security/security.h \
   /usr/include/c++/12/future \
   /usr/include/c++/12/condition_variable \
   /usr/include/c++/12/stop_token \
@@ -332,6 +329,19 @@ CMakeFiles/kvstore.dir/app.cc.o: /home/gong/projects/kvstore/server/src/app.cc \
   /usr/include/semaphore.h \
   /usr/include/x86_64-linux-gnu/bits/semaphore.h \
   /usr/include/c++/12/bits/atomic_futex.h \
+  /usr/include/c++/12/list \
+  /usr/include/c++/12/bits/stl_list.h \
+  /usr/include/c++/12/bits/list.tcc \
+  /usr/include/c++/12/unordered_set \
+  /usr/include/c++/12/bits/unordered_set.h \
+  /usr/include/c++/12/shared_mutex \
+  /usr/include/c++/12/queue \
+  /usr/include/c++/12/deque \
+  /usr/include/c++/12/bits/stl_deque.h \
+  /usr/include/c++/12/bits/deque.tcc \
+  /usr/include/c++/12/bits/stl_queue.h \
+  /usr/include/c++/12/stack \
+  /usr/include/c++/12/bits/stl_stack.h \
   /home/gong/projects/kvstore/server/include/thread_pool/ThreadPool.hpp \
   /usr/include/c++/12/thread \
   /home/gong/projects/kvstore/server/include/split/split.hpp \
@@ -428,13 +438,6 @@ CMakeFiles/kvstore.dir/app.cc.o: /home/gong/projects/kvstore/server/src/app.cc \
   /home/gong/projects/kvstore/server/include/spdlog/details/synchronous_factory.h \
   /home/gong/projects/kvstore/server/include/spdlog/version.h \
   /home/gong/projects/kvstore/server/include/spdlog/spdlog-inl.h \
-  /home/gong/projects/kvstore/server/include/app/security.h \
-  /usr/include/c++/12/list \
-  /usr/include/c++/12/bits/stl_list.h \
-  /usr/include/c++/12/bits/list.tcc \
-  /usr/include/c++/12/unordered_set \
-  /usr/include/c++/12/bits/unordered_set.h \
-  /usr/include/c++/12/shared_mutex \
   /usr/include/c++/12/span
 
 CMakeFiles/kvstore.dir/config.cc.o: /home/gong/projects/kvstore/server/src/config.cc \
@@ -1459,11 +1462,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /usr/include/linux/falloc.h \
   /usr/include/x86_64-linux-gnu/bits/stat.h \
   /usr/include/x86_64-linux-gnu/bits/struct_stat.h \
-  /usr/include/c++/12/queue \
-  /usr/include/c++/12/deque \
-  /usr/include/c++/12/bits/stl_deque.h \
-  /usr/include/c++/12/bits/deque.tcc \
-  /usr/include/c++/12/bits/stl_queue.h \
+  /home/gong/projects/kvstore/server/include/protocol/protocol.hpp \
+  /home/gong/projects/kvstore/server/include/security/security.h \
   /usr/include/c++/12/future \
   /usr/include/c++/12/condition_variable \
   /usr/include/c++/12/stop_token \
@@ -1477,6 +1477,19 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /usr/include/semaphore.h \
   /usr/include/x86_64-linux-gnu/bits/semaphore.h \
   /usr/include/c++/12/bits/atomic_futex.h \
+  /usr/include/c++/12/list \
+  /usr/include/c++/12/bits/stl_list.h \
+  /usr/include/c++/12/bits/list.tcc \
+  /usr/include/c++/12/unordered_set \
+  /usr/include/c++/12/bits/unordered_set.h \
+  /usr/include/c++/12/shared_mutex \
+  /usr/include/c++/12/queue \
+  /usr/include/c++/12/deque \
+  /usr/include/c++/12/bits/stl_deque.h \
+  /usr/include/c++/12/bits/deque.tcc \
+  /usr/include/c++/12/bits/stl_queue.h \
+  /usr/include/c++/12/stack \
+  /usr/include/c++/12/bits/stl_stack.h \
   /home/gong/projects/kvstore/server/include/thread_pool/ThreadPool.hpp \
   /usr/include/c++/12/thread \
   /home/gong/projects/kvstore/server/include/split/split.hpp \
@@ -1573,13 +1586,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /home/gong/projects/kvstore/server/include/spdlog/details/synchronous_factory.h \
   /home/gong/projects/kvstore/server/include/spdlog/version.h \
   /home/gong/projects/kvstore/server/include/spdlog/spdlog-inl.h \
-  /home/gong/projects/kvstore/server/include/app/security.h \
-  /usr/include/c++/12/list \
-  /usr/include/c++/12/bits/stl_list.h \
-  /usr/include/c++/12/bits/list.tcc \
-  /usr/include/c++/12/unordered_set \
-  /usr/include/c++/12/bits/unordered_set.h \
-  /usr/include/c++/12/shared_mutex \
   /usr/include/c++/12/span \
   /home/gong/projects/kvstore/server/include/config/config.h \
   /usr/include/c++/12/fstream \
@@ -1662,8 +1668,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h
 
 
-/home/gong/projects/kvstore/server/src/main.cc:
-
 /home/gong/projects/kvstore/server/include/fileio/fileio.h:
 
 /home/gong/projects/kvstore/server/include/rapidjson/internal/strfunc.h:
@@ -1734,18 +1738,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/fstream:
 
-/usr/include/c++/12/shared_mutex:
-
-/usr/include/c++/12/bits/unordered_set.h:
-
-/usr/include/c++/12/bits/list.tcc:
-
-/usr/include/c++/12/bits/stl_list.h:
-
-/usr/include/c++/12/filesystem:
-
-/usr/include/c++/12/list:
-
 /home/gong/projects/kvstore/server/include/spdlog/spdlog-inl.h:
 
 /home/gong/projects/kvstore/server/include/spdlog/version.h:
@@ -1800,8 +1792,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /home/gong/projects/kvstore/server/include/rapidjson/error/error.h:
 
-/home/gong/projects/kvstore/server/include/app/security.h:
-
 /usr/include/c++/12/tr1/poly_hermite.tcc:
 
 /usr/include/c++/12/tr1/legendre_function.tcc:
@@ -1850,6 +1840,24 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /home/gong/projects/kvstore/server/include/thread_pool/ThreadPool.hpp:
 
+/home/gong/projects/kvstore/server/src/main.cc:
+
+/usr/include/c++/12/stack:
+
+/usr/include/c++/12/bits/deque.tcc:
+
+/usr/include/c++/12/shared_mutex:
+
+/usr/include/c++/12/bits/unordered_set.h:
+
+/usr/include/c++/12/bits/list.tcc:
+
+/usr/include/c++/12/bits/stl_list.h:
+
+/usr/include/c++/12/filesystem:
+
+/usr/include/c++/12/list:
+
 /usr/include/c++/12/bits/atomic_futex.h:
 
 /usr/include/x86_64-linux-gnu/bits/semaphore.h:
@@ -1872,7 +1880,9 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/atomic:
 
-/usr/include/c++/12/bits/deque.tcc:
+/home/gong/projects/kvstore/server/include/security/security.h:
+
+/home/gong/projects/kvstore/server/include/protocol/protocol.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/struct_stat.h:
 
@@ -1945,6 +1955,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/c++/12/bits/uses_allocator_args.h:
 
 /usr/include/c++/12/bits/ranges_algobase.h:
+
+/usr/include/c++/12/bits/stl_stack.h:
 
 /usr/include/c++/12/bits/ranges_uninitialized.h:
 
@@ -2656,9 +2668,9 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/stl_raw_storage_iter.h:
 
-/usr/include/c++/12/unordered_set:
-
 /home/gong/projects/kvstore/server/include/spdlog/details/os-inl.h:
+
+/usr/include/c++/12/unordered_set:
 
 /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
 

@@ -1,10 +1,10 @@
 <!--
  * @Description: 
- * @Version: 4.9
+ * @Version: 1.0
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-05 04:30:04
+ * @LastEditTime: 2023-10-07 11:26:14
 -->
 <<<<<<< HEAD
 # kvstore
@@ -15,10 +15,9 @@ rapaidjson(已内置)
 gcc 版本支持C++20 (8.0以上) 
 
 =======
-### 协议
-version:1.0 //8bit
-length //16bit
-body   
+### 协议头
+version:1.0 //4byte
+length //4byte
 =======
 
 
@@ -41,7 +40,8 @@ LPUSH key value[values...]
 RPUSH key value[values...]
 LGET key
 LCOUNT key
-LDELETE key [values...] //返回删除value个数
+LPOP key [values...] //返回删除value个数
+RPOP key [values...]
 LEXIST key value //判断value是否存在于key中
 
 RSET key field value [field value ...]
@@ -61,3 +61,19 @@ quit //客户端退出
 BEG
 
 END //事务
+
+
+======
+### 线程安全
+采用读写锁以提高性能，较之前的版本性能得到大幅提高(肉眼可见的执行速度变快)并且store和store中的每一个key都对应一个锁，而不是直接对store进行锁死，对性能有很大提升，比如需要对store结构进行变更且需要对其中某个key所对应的数据结构进行更改，这时结构更改完毕后立即释放store写锁，并对key写锁进行上锁，其他线程此时可以访问该store的其他key而不需要一直等待该操作全部完成
+
+
+======
+### 持久化
+1.定时将各数据结构写入磁盘
+2.有一个文件保存每次执行的命令，并在执行完毕后删除该条命令，作用是防止宕机未执行的命令(暂不考虑，代价太大，每一次都要读写文件)
+3.有一个文件保留不超过file_max_size的命令，以便HISTORY n查看前n次命令
+4.有一个文件存储事务
+
+
+解决客户端断开却还有命令没有处理的问题

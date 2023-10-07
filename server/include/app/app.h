@@ -6,7 +6,8 @@
 #include "../thread_pool/ThreadPool.hpp"
 #include "../split/split.hpp"
 #include "../spdlog/spdlog.h"
-#include "security.h"
+#include "../protocol/protocol.hpp"
+#include "../security/security.h"
 #include <queue>
 #include <unordered_set>
 #include <list>
@@ -50,6 +51,7 @@ typedef enum CMD{
     CMD_SEXIST,
     CMD_EVENTBEG,
     CMD_EVENTEND,
+    CMD_ROLLBACK,
     CMD_END,
 } CMD;
 
@@ -82,7 +84,8 @@ static const char *cmds[CMD_END]={
     "SDELETE",
     "SEXIST",
     "BEG",
-    "END"
+    "END",
+    "ROLLBACK"
 };
 
 typedef enum RETCODE
@@ -93,9 +96,11 @@ typedef enum RETCODE
     RET_NOT_EXIST,
     RET_NO_KEY,
     RET_NO_FIELD,
+    RET_NULL,
     RET_STR_ERROR,
     RET_ARG_ERROR,
     RET_CMD_ERROR,
+    RET_ROLLBACK_ERROR,
     RET_END,
 } RETCODE;
 
@@ -106,9 +111,11 @@ static const char *ret_msg[RET_END]=
     "NOT EXIST\r\n",
     "NO KEY\r\n",
     "NO FIELD\r\n",
+    "",
     "ERROR_STR\r\n",
     "ERROR_ARG\r\n",
     "ERROR_CMD\r\n",
+    "ERROR_ROLLBACK_FILED\r\n"
 };
 
 #endif
@@ -118,44 +125,68 @@ class APP
 public:
     using Server_Ptr = std::shared_ptr<Server>;
     using Tcp_Conn_Ptr = std::shared_ptr<Tcp_Conn>;
-    APP(uint16_t port,uint16_t backlog,uint8_t thread_num,uint32_t event_num,uint32_t buffer_size,int64_t wait_for_lock_millisec)
+    using Affair_Ptr = std::shared_ptr<Affairs>;
+
+    APP(uint32_t event_num,uint16_t port, uint16_t backlog, uint8_t thread_num,uint64_t wait_for_lock_millisec)
     {
         wait_lock_millisec = wait_for_lock_millisec;
         R = new Reactor(event_num);
-        Init(port,backlog,thread_num,buffer_size);
+        th_pool.Create(thread_num);
+        Server_Ptr server = std::make_shared<Server>();
+        R->Add_Server(server);
+        server->Bind(port);
+        server->Listen(backlog);
+        R->Set_No_Block(server->Get_Sock());
+        R->Add_Reactor(server->Get_Sock(), EPOLLIN);
     }
-    int Init(uint16_t port,uint16_t backlog,uint8_t thread_num,uint32_t per_max_rcv_size);
 
-    string Decode(string buffer);
+    int Init_cb(std::function<void()>&accept_cb,std::function<void()>&read_cb
+        ,std::function<void()>&write_cb,std::function<void()>&exit_cb);
 
-    string Work(APP::Tcp_Conn_Ptr& conn);
+    Reactor* Get_Reactor(){ return this->R;}
     
+    ThreadPool& Get_Thread_Pool(){ return this->th_pool;}
+
     void Run(){
         R->Event_Loop();
     }
+    /**
+     * @description: 处理连接断开后该连接未执行完的任务
+     * @param {Tcp_Conn_Ptr&} conn_ptr 
+     * @param {uint32_t} event //需要移除的事件类型
+     * @return {*}
+     * @author: Gong
+     */    
+    void Deal_Closed_Conn(Tcp_Conn_Ptr& conn_ptr,uint32_t event);
+
+    Reactor::Timer_Ptr Add_Time_Out_cb(uint16_t timerid, uint64_t interval_time, Timer::TimerType type,function<void()> &&timeout_cb);
+
+    string Work(APP::Tcp_Conn_Ptr& conn);
 private:
 
 
-    string Decode_String(int cmd_type,vector<string_view>& res);
-    string Decode_Array(int cmd_type,vector<string_view>& res);
-    string Decode_List(int cmd_type,vector<string_view>& res);
-    string Decode_Rbtree(int cmd_type,vector<string_view>& res);
-    string Decode_Set(int cmd_type,vector<string_view>& res);
+    string Decode(Msg& msg);
+
+    string Decode_String(Msg& msg, int cmd_type,vector<string_view>& res);
+    string Decode_Array(Msg& msg,int cmd_type,vector<string_view>& res);
+    string Decode_List(Msg& msg,int cmd_type,vector<string_view>& res);
+    string Decode_Rbtree(Msg& msg,int cmd_type,vector<string_view>& res);
+    string Decode_Set(Msg& msg,int cmd_type,vector<string_view>& res);
     //string Decode_Skiptable(int cmd_type,vector<string_view>& res);
 
     //--------------------- 字符串 -------------------------
-    string Exec_Cmd_Set(string key,string value);
+    string Exec_Cmd_Set(Msg& msg, string key,string value);
     string Exec_Cmd_Get(string key);
     string Exec_Cmd_Appand(string key,string value);
     string Exec_Cmd_Len(string key);
-    string Exec_Cmd_Delete(string key);
+    string Exec_Cmd_Delete(Msg& msg, string key);
     string Exec_Cmd_Exist(string key);
 
     //--------------------- 数组 -------------------------
     string Exec_Cmd_ASet(string key,vector<string_view> &res);
     string Exec_Cmd_AGet(string key);
     string Exec_Cmd_ACount(string key);
-    string Exec_Cmd_ADelete(string key,vector<string_view> &res);
+    string Exec_Cmd_ADelete(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_AExist(string key,string value);
 
     //--------------------- 链表 -------------------------
@@ -163,7 +194,7 @@ private:
     string Exec_Cmd_RPUSH(string key,vector<string_view> &res);
     string Exec_Cmd_LGet(string key);
     string Exec_Cmd_LCount(string key);
-    string Exec_Cmd_LDelete(string key,vector<string_view> &res);
+    string Exec_Cmd_LDelete(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_LExist(string key,string value);
 
 
@@ -171,22 +202,32 @@ private:
     string Exec_Cmd_RSet(string key,vector<string_view> &res);
     string Exec_Cmd_RGet(string key,string field);
     string Exec_Cmd_RCount(string key);
-    string Exec_Cmd_RDelete(string key,vector<string_view> &res);
+    string Exec_Cmd_RDelete(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_RExist(string key,string field);
     
     //--------------------- 集合 -------------------------
     string Exec_Cmd_SSet(string key,vector<string_view> &res);
     string Exec_Cmd_SGet(string key);
     string Exec_Cmd_SCount(string key);
-    string Exec_Cmd_SDelete(string key,vector<string_view> &res);
+    string Exec_Cmd_SDelete(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_SExist(string key,string value);
 
+    //---------------------event---------------------
+    string Exec_Cmd_Eevent_Beg(Msg& msg);
+    string Exec_Cmd_End(Msg& msg);
+    string Exec_Cmd_RollBack(Msg& msg);
+
+
+    void BackUp();
 
 private:
 
     ThreadPool th_pool; // 线程池
-    Reactor *R;       
-    int64_t wait_lock_millisec;
+    Reactor *R;
+
+    uint64_t cmd_save_millisec;//定时保存命令到磁盘以防宕机或连接断开
+
+    uint64_t wait_lock_millisec;
 
     Map_Security_String_Store string_store;//string存储
     
@@ -197,4 +238,8 @@ private:
     Map_Security_RBtree_Store rbtree_store;//rbtree存储
 
     Map_Security_Set_Store set_store;//set存储
+
+    Security_Back_Store back_store;//存储DELETE key的信息
+
+    std::map<uint32_t,Affair_Ptr> affairs;//存储各个连接对应的事务,每个连接同时只能执行一个事务
 };

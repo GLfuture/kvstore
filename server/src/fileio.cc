@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-30 14:09:41
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-05 06:46:29
+ * @LastEditTime: 2023-10-06 07:23:43
  */
 #include "fileio/fileio.h"
 
@@ -41,4 +41,5 @@ int File_IO::Read(std::string &content)
 }
 int File_IO::Write(const std::string &buffer)
 {
+    return 0;
 }

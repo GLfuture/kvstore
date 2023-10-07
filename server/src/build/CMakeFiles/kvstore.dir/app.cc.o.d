@@ -252,17 +252,24 @@ CMakeFiles/kvstore.dir/app.cc.o: \
  /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
  /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
  /usr/include/x86_64-linux-gnu/bits/struct_stat.h \
- /usr/include/c++/12/queue /usr/include/c++/12/deque \
- /usr/include/c++/12/bits/stl_deque.h /usr/include/c++/12/bits/deque.tcc \
- /usr/include/c++/12/bits/stl_queue.h /usr/include/c++/12/future \
- /usr/include/c++/12/condition_variable /usr/include/c++/12/stop_token \
- /usr/include/c++/12/atomic /usr/include/c++/12/bits/std_thread.h \
- /usr/include/c++/12/semaphore /usr/include/c++/12/bits/semaphore_base.h \
+ /home/gong/projects/kvstore/server/src/../include/app/../network/../protocol/protocol.hpp \
+ /home/gong/projects/kvstore/server/src/../include/app/../network/../protocol/../security/security.h \
+ /usr/include/c++/12/future /usr/include/c++/12/condition_variable \
+ /usr/include/c++/12/stop_token /usr/include/c++/12/atomic \
+ /usr/include/c++/12/bits/std_thread.h /usr/include/c++/12/semaphore \
+ /usr/include/c++/12/bits/semaphore_base.h \
  /usr/include/c++/12/bits/atomic_timed_wait.h \
  /usr/include/c++/12/bits/this_thread_sleep.h \
  /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/semaphore.h \
  /usr/include/x86_64-linux-gnu/bits/semaphore.h \
- /usr/include/c++/12/bits/atomic_futex.h \
+ /usr/include/c++/12/bits/atomic_futex.h /usr/include/c++/12/list \
+ /usr/include/c++/12/bits/stl_list.h /usr/include/c++/12/bits/list.tcc \
+ /usr/include/c++/12/unordered_set \
+ /usr/include/c++/12/bits/unordered_set.h \
+ /usr/include/c++/12/shared_mutex /usr/include/c++/12/queue \
+ /usr/include/c++/12/deque /usr/include/c++/12/bits/stl_deque.h \
+ /usr/include/c++/12/bits/deque.tcc /usr/include/c++/12/bits/stl_queue.h \
+ /usr/include/c++/12/stack /usr/include/c++/12/bits/stl_stack.h \
  /home/gong/projects/kvstore/server/src/../include/app/../thread_pool/ThreadPool.hpp \
  /usr/include/c++/12/thread \
  /home/gong/projects/kvstore/server/src/../include/app/../split/split.hpp \
@@ -347,8 +354,4 @@ CMakeFiles/kvstore.dir/app.cc.o: \
  /home/gong/projects/kvstore/server/src/../include/spdlog/details/synchronous_factory.h \
  /home/gong/projects/kvstore/server/src/../include/spdlog/version.h \
  /home/gong/projects/kvstore/server/src/../include/app/../spdlog/spdlog-inl.h \
- /home/gong/projects/kvstore/server/src/../include/app/security.h \
- /usr/include/c++/12/list /usr/include/c++/12/bits/stl_list.h \
- /usr/include/c++/12/bits/list.tcc /usr/include/c++/12/unordered_set \
- /usr/include/c++/12/bits/unordered_set.h \
- /usr/include/c++/12/shared_mutex /usr/include/c++/12/span
+ /usr/include/c++/12/span
