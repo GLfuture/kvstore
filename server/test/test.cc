@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-07 09:03:07
+ * @LastEditTime: 2023-10-08 02:56:49
  */
 #include<iostream>
 #include<netinet/in.h>
@@ -12,6 +12,7 @@
 #include"Client_Socket/Client_Socket.hpp"
 using namespace Client_Socket_NSP;
 #define VERSION_LEN 4
+#define SERVER_IP "192.168.124.140"
 class Proto_Head
 {
 public:
@@ -22,20 +23,32 @@ public:
     uint32_t length;
 };
 
+void  Decode_Proto_Head(string buffer,Proto_Head& head)
+{
+    memcpy(&head,buffer.c_str(),sizeof(Proto_Head));
 
-void Test(Client_Socket& client ,string send_msg,const char *except,const char* func, bool flag)
+}
+
+
+void Test(Client_Socket& client ,string send_msg,string except,const char* func, bool flag)
 {
     
     int send_len = send(client.Get_Fd(),send_msg.c_str(),send_msg.length(),0);
-    std::cout<<"send len:"<<send_len<<std::endl;
     if(!flag){
-        int len = client.Recv();
+        int len = client.Recv(sizeof(Proto_Head));
+        //std::cout<< len <<std::endl;
+        Proto_Head head;
+        memset(&head,0,sizeof(Proto_Head));
+        Decode_Proto_Head(string(client.Get_Read_Buffer()),head);
+        client.Clean_Read_Buffer();
+        len = client.Recv(head.length);
+        //std::cout<<"body len : "<<len <<std::endl;
     }
     if(client.Get_Read_Buffer().compare(except)==0){
         printf("%s : Success\n",func);
     }else{
         printf("%s : Failed\n",func);
-        printf("failue return : %s %ld %ld\n",client.Get_Read_Buffer().cbegin(),client.Get_Read_Buffer().size(),strlen(except));
+        printf("failue return : %s %ld %ld\n",client.Get_Read_Buffer().cbegin(),client.Get_Read_Buffer().size(),except.length());
     }
     client.Clean_Read_Buffer();
 }
@@ -51,13 +64,10 @@ string Proc_Protocol(string content)
     string res(buffer,sizeof(Proto_Head));
     return res+content;
 }
-
-
-
 int main(int argc,char *argv[])
 {
     if(argc<2) exit(0);
-    Client_Socket client("192.168.124.140",atoi(argv[1]));
+    Client_Socket client(SERVER_IP,atoi(argv[1]));
     client.Socket_Init();
     client.Connect();
     Test(client,Proc_Protocol("SET str 'my best girl friend'"),"OK\r\n","SET",false);
@@ -121,12 +131,20 @@ int main(int argc,char *argv[])
     Test(client,Proc_Protocol("SDELETE name"),"2\r\n","SDELETE ALL",false);
     Test(client,Proc_Protocol("SCOUNT name"),"NO KEY\r\n","VERIFY LAST COMMAND",false);
 
+
+
+    Test(client,Proc_Protocol("SET name lu"),"OK\r\n","Before affairs",false);
     Test(client,Proc_Protocol("BEG"),"","BEG AFFAIRS",true);
-    Test(client,Proc_Protocol("SET name gong"),"","ADDING",true);
+    Test(client,Proc_Protocol("APPAND name ' yv jia'"),"","ADDING",true);
     Test(client,Proc_Protocol("SET teacher king"),"","ADDING",true);
     Test(client,Proc_Protocol("END"),"OK\r\n","END AFFAIRS",false);
-    Test(client,Proc_Protocol("GET name"),"gong\r\n","IDENTIFY",false);
+    Test(client,Proc_Protocol("GET name"),"lu yv jia\r\n","IDENTIFY",false);
+    Test(client,Proc_Protocol("GET teacher"),"king\r\n","IDENTIFY",false);
     Test(client,Proc_Protocol("ROLLBACK"),"OK\r\n","ROLLBACK",false);
+    Test(client,Proc_Protocol("GET name"),"lu\r\n","IDENTIFY",false);
+    Test(client,Proc_Protocol("GET teacher"),"NO KEY\r\n","IDENTIFY",false);
+    Test(client,Proc_Protocol("CLEAN_CACHE"),"OK\r\n","CLEAN",false);
+    Test(client,Proc_Protocol("ROLLBACK"),"OK\r\n","IDENTIFY",false);
     Test(client,Proc_Protocol("GET name"),"NO KEY\r\n","IDENTIFY",false);
     client.Close();
     return 0;

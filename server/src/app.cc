@@ -50,6 +50,8 @@ string APP::Decode(Msg& msg)
                     ret_info = Exec_Cmd_Eevent_Beg(msg);
                 else if(i == CMD_ROLLBACK)
                     ret_info = Exec_Cmd_RollBack(msg);
+                else if(i == CMD_CLEAN_CACHE)
+                    ret_info = Exec_Cmd_Clean_Cache(msg);
             }else{
                 if(i == CMD_EVENTEND)
                     ret_info = Exec_Cmd_End(msg);
@@ -318,7 +320,7 @@ string APP::Decode_Set(Msg& msg,int cmd_type, vector<string_view> &res)
 
 string APP::Exec_Cmd_Set(Msg& msg, string key, string value)
 {
-    //std::shared_lock all_lock(*back_store.mtx);
+    std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*string_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -399,7 +401,7 @@ string APP::Exec_Cmd_Len(string key)
 
 string APP::Exec_Cmd_Delete(Msg& msg,string key)
 {
-    //std::shared_lock all_lock(*back_store.mtx);
+    std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*string_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -429,7 +431,7 @@ string APP::Exec_Cmd_Exist(string key)
 
 string APP::Exec_Cmd_ASet(string key,vector<string_view> &res)
 {
-    //std::shared_lock all_lock(*back_store.mtx);
+    std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*array_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -502,7 +504,7 @@ string APP::Exec_Cmd_ACount(string key)
 
 string APP::Exec_Cmd_ADelete(Msg& msg,string key,vector<string_view> &res)
 {
-    //std::shared_lock all_lock(*back_store.mtx);
+    std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*array_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -673,7 +675,7 @@ string APP::Exec_Cmd_LCount(string key)
 
 string APP::Exec_Cmd_LDelete(Msg& msg,string key, vector<string_view> &res)
 {
-    //std::shared_lock all_lock(*back_store.mtx);
+    std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*list_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -745,7 +747,7 @@ string APP::Exec_Cmd_LExist(string key, string value)
 
 string APP::Exec_Cmd_RSet(string key,vector<string_view> &res)
 {
-    //std::shared_lock all_lock(*back_store.mtx);
+    std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*rbtree_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -812,7 +814,7 @@ string APP::Exec_Cmd_RCount(string key)
 
 string APP::Exec_Cmd_RDelete(Msg& msg,string key,vector<string_view> &res)
 {
-    //std::shared_lock all_lock(*back_store.mtx);
+    std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*rbtree_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -875,7 +877,7 @@ string APP::Exec_Cmd_RExist(string key, string field)
 
 string APP::Exec_Cmd_SSet(string key, vector<string_view> &res)
 {
-    //std::shared_lock all_lock(*back_store.mtx);
+    std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*set_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -944,7 +946,7 @@ string APP::Exec_Cmd_SCount(string key)
 
 string APP::Exec_Cmd_SDelete(Msg& msg,string key, vector<string_view> &res)
 {
-    //std::shared_lock all_lock(*back_store.mtx);
+    std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*set_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
@@ -1012,6 +1014,7 @@ string APP::Exec_Cmd_SExist(string key, string value)
 
 string APP::Exec_Cmd_Eevent_Beg(Msg& msg)
 {
+    Exec_Cmd_Clean_Cache(msg);
     BackUp();
     msg.Event_Start->store(true);
     affairs.emplace(msg.fd,std::make_shared<Affairs>());
@@ -1020,12 +1023,44 @@ string APP::Exec_Cmd_Eevent_Beg(Msg& msg)
 
 void APP::BackUp()
 {
-    //std::unique_lock lock(*back_store.mtx);
-    back_store.array_store = array_store.store;
-    back_store.list_store = list_store.store;
-    back_store.rbtree_store = rbtree_store.store;
-    back_store.set_store = set_store.store;
-    back_store.string_store = string_store.store;
+    std::unique_lock lock(*back_store.mtx);
+    for(auto it = string_store.store.begin();it != string_store.store.end();it++)
+    {
+        //std::cout << it->first <<"  " <<it->second->security_string << std::endl;
+        // std::cout << "size :" << string_store.store.size() << std::endl;
+        // std::cout << "size :" << back_store.string_store.size() << std::endl;
+        const auto& pair = back_store.string_store.emplace(it->first,std::make_shared<Security_String>());
+        //std::cout << it->first <<"  " <<it->second->security_string << std::endl;
+        pair.first->second->security_string = it->second->security_string;
+        //std::cout<< pair.first->second->security_string <<std::endl;
+    }
+
+    for(auto it = array_store.store.begin();it!=array_store.store.end();it++)
+    {
+        const auto&pair =  back_store.array_store.emplace(it->first,std::make_shared<Security_Array>());
+        pair.first->second->security_array.assign(it->second->security_array.begin(),it->second->security_array.end());
+    }
+
+    for(auto it = list_store.store.begin();it!=list_store.store.end();it++)
+    {
+        const auto&pair = back_store.list_store.emplace(it->first,std::make_shared<Security_List>());
+        pair.first->second->security_list.assign(it->second->security_list.begin(),it->second->security_list.end());
+    }
+
+    for(auto it = rbtree_store.store.begin();it!=rbtree_store.store.end();it++)
+    {
+        const auto& pair = back_store.rbtree_store.emplace(it->first,std::make_shared<Security_RBtree>());
+        for(auto mit = it->second->security_rbtree.begin();mit!=it->second->security_rbtree.end();mit++)
+        {
+            pair.first->second->security_rbtree[mit->first] = mit->second;
+        }
+    }
+
+    for(auto it = set_store.store.begin();it!=set_store.store.end();it++)
+    {
+        const auto& pair = back_store.set_store.emplace(it->first,std::make_shared<Security_Set>());
+        pair.first->second->security_set = it->second->security_set;
+    }
 }
 
 string APP::Exec_Cmd_End(Msg& msg)
@@ -1053,11 +1088,57 @@ string APP::Exec_Cmd_End(Msg& msg)
 
 string APP::Exec_Cmd_RollBack(Msg &msg)
 {
-    //std::unique_lock lock(*back_store.mtx);
-    array_store.store = back_store.array_store;
-    list_store.store = back_store.list_store;
-    rbtree_store.store = back_store.rbtree_store;
-    set_store.store = back_store.set_store;
-    string_store.store = back_store.string_store;
+    std::unique_lock lock(*back_store.mtx);
+    string_store.store.clear();
+    array_store.store.clear();
+    list_store.store.clear();
+    rbtree_store.store.clear();
+    set_store.store.clear();
+    for(auto it = back_store.string_store.begin();it != back_store.string_store.end();it++)
+    {
+        //std::cout << it->first <<"  " <<it->second->security_string << std::endl;
+        const auto& pair = string_store.store.emplace(it->first,std::make_shared<Security_String>());
+        pair.first->second->security_string = it->second->security_string;
+        //std::cout<<pair.first->second->security_string<<std::endl;
+    }
+
+    for(auto it = back_store.array_store.begin();it != back_store.array_store.end();it++)
+    {
+        const auto&pair =  array_store.store.emplace(it->first,std::make_shared<Security_Array>());
+        pair.first->second->security_array.assign(it->second->security_array.begin(),it->second->security_array.end());
+    }
+
+    for(auto it = back_store.list_store.begin();it!=back_store.list_store.end();it++)
+    {
+        const auto&pair = list_store.store.emplace(it->first,std::make_shared<Security_List>());
+        pair.first->second->security_list.assign(it->second->security_list.begin(),it->second->security_list.end());
+    }
+
+    for(auto it = back_store.rbtree_store.begin();it!=back_store.rbtree_store.end();it++)
+    {
+        const auto& pair = rbtree_store.store.emplace(it->first,std::make_shared<Security_RBtree>());
+        for(auto mit = it->second->security_rbtree.begin();mit!=it->second->security_rbtree.end();mit++)
+        {
+            pair.first->second->security_rbtree[mit->first] = mit->second;
+        }
+    }
+
+    for(auto it = back_store.set_store.begin();it!=back_store.set_store.end();it++)
+    {
+        const auto& pair = set_store.store.emplace(it->first,std::make_shared<Security_Set>());
+        pair.first->second->security_set = it->second->security_set;
+    }
+    return ret_msg[RET_OK];
+}
+
+
+string APP::Exec_Cmd_Clean_Cache(Msg& msg)
+{
+    std::shared_lock lock(*back_store.mtx);
+    back_store.array_store.clear();
+    back_store.list_store.clear();
+    back_store.rbtree_store.clear();
+    back_store.set_store.clear();
+    back_store.string_store.clear();
     return ret_msg[RET_OK];
 }

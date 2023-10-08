@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-30 13:56:13
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-07 08:13:16
+ * @LastEditTime: 2023-10-07 11:47:44
  */
 #pragma once
 #include "reactor.h"
@@ -135,6 +135,14 @@ public:
         int len = recv(fd,buffer,sizeof(Proto_Head),0);
         memcpy(&head,buffer,sizeof(Proto_Head));
         return len;
+    }
+
+    int Send_Proto_Head(int fd,const Proto_Head&& head)
+    {
+        char * buffer = new char[sizeof(Proto_Head)];
+        memset(buffer, 0 ,sizeof(Proto_Head));
+        memcpy(buffer,&head,sizeof(Proto_Head));
+        return send(fd,buffer,sizeof(Proto_Head),0);
     }
 
     void Finish_All_Future_Before_Del_Conn(Tcp_Conn_Ptr& conn_ptr) 

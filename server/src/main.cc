@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-07 11:21:02
+ * @LastEditTime: 2023-10-08 09:02:18
  */
 
 #include"app/app.h"
@@ -12,6 +12,8 @@
 
 #define THREAD_NUM 8
 #define MAX_CONN_NUM 10
+#define PRORO_VERION "1.0"
+#define VERION_LENGTH 4
 using namespace Config_NSP;
 
 static bool Is_Exist = false;
@@ -91,10 +93,17 @@ void Write_cb(Reactor *R)
     while(!conn->Future_Has_Finished()){
     };
     res = conn->Future_Get_An_Finished();
+    //std::cout<<res<<std::endl;
     if(!res.empty()){
         if(!*conn->Get_Affairs_Status()){
             conn->Appand_Wbuffer(res);
-            int len = server->Send(conn, conn->Get_Wbuffer_Length());
+            Proto_Head head;
+            memcpy(head.version,PRORO_VERION,VERION_LENGTH);
+            head.length = conn->Get_Wbuffer_Length();
+            int len = server->Send_Proto_Head(clientfd,std::move(head));
+            //std::cout<<"send head len : "<<len <<std::endl;
+            len = server->Send(conn, conn->Get_Wbuffer_Length());
+            //std::cout<<"send body len : "<<len<<std::endl;
             conn->Erase_Wbuffer(conn->Get_Wbuffer_Length());
         }
     }

@@ -58,7 +58,7 @@ namespace Client_Socket_NSP
             if (size == DEFAULT_SIZE)
                 size = this->_buffersize;
             int len = recv(this->client_fd, this->_buffer, size, 0);
-            this->rbuffer += this->_buffer;
+            this->rbuffer.append(this->_buffer,len);
             memset(this->_buffer, 0, this->_buffersize);
             return len;
         }

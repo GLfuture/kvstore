@@ -1,22 +1,22 @@
 [
 {
   "directory": "/home/gong/projects/kvstore/build",
-  "command": "/usr/bin/g++  -I/home/gong/projects/kvstore/server/src/../include -g -std=gnu++20 -o CMakeFiles/kvstore.dir/main.cc.o -c /home/gong/projects/kvstore/server/src/main.cc",
+  "command": "/usr/bin/g++  -I/home/gong/projects/kvstore/server/src/../../thirdparty -I/home/gong/projects/kvstore/server/src/../include -g -std=gnu++20 -o CMakeFiles/kvstore.dir/main.cc.o -c /home/gong/projects/kvstore/server/src/main.cc",
   "file": "/home/gong/projects/kvstore/server/src/main.cc"
 },
 {
   "directory": "/home/gong/projects/kvstore/build",
-  "command": "/usr/bin/g++  -I/home/gong/projects/kvstore/server/src/../include -g -std=gnu++20 -o CMakeFiles/kvstore.dir/app.cc.o -c /home/gong/projects/kvstore/server/src/app.cc",
+  "command": "/usr/bin/g++  -I/home/gong/projects/kvstore/server/src/../../thirdparty -I/home/gong/projects/kvstore/server/src/../include -g -std=gnu++20 -o CMakeFiles/kvstore.dir/app.cc.o -c /home/gong/projects/kvstore/server/src/app.cc",
   "file": "/home/gong/projects/kvstore/server/src/app.cc"
 },
 {
   "directory": "/home/gong/projects/kvstore/build",
-  "command": "/usr/bin/g++  -I/home/gong/projects/kvstore/server/src/../include -g -std=gnu++20 -o CMakeFiles/kvstore.dir/config.cc.o -c /home/gong/projects/kvstore/server/src/config.cc",
+  "command": "/usr/bin/g++  -I/home/gong/projects/kvstore/server/src/../../thirdparty -I/home/gong/projects/kvstore/server/src/../include -g -std=gnu++20 -o CMakeFiles/kvstore.dir/config.cc.o -c /home/gong/projects/kvstore/server/src/config.cc",
   "file": "/home/gong/projects/kvstore/server/src/config.cc"
 },
 {
   "directory": "/home/gong/projects/kvstore/build",
-  "command": "/usr/bin/g++  -I/home/gong/projects/kvstore/server/src/../include -g -std=gnu++20 -o CMakeFiles/kvstore.dir/fileio.cc.o -c /home/gong/projects/kvstore/server/src/fileio.cc",
+  "command": "/usr/bin/g++  -I/home/gong/projects/kvstore/server/src/../../thirdparty -I/home/gong/projects/kvstore/server/src/../include -g -std=gnu++20 -o CMakeFiles/kvstore.dir/fileio.cc.o -c /home/gong/projects/kvstore/server/src/fileio.cc",
   "file": "/home/gong/projects/kvstore/server/src/fileio.cc"
 }
 ]

@@ -5,9 +5,9 @@
 #include "../network/netlib.h"
 #include "../thread_pool/ThreadPool.hpp"
 #include "../split/split.hpp"
-#include "../spdlog/spdlog.h"
 #include "../protocol/protocol.hpp"
 #include "../security/security.h"
+#include "spdlog/spdlog.h"
 #include <queue>
 #include <unordered_set>
 #include <list>
@@ -52,6 +52,7 @@ typedef enum CMD{
     CMD_EVENTBEG,
     CMD_EVENTEND,
     CMD_ROLLBACK,
+    CMD_CLEAN_CACHE,
     CMD_END,
 } CMD;
 
@@ -85,7 +86,8 @@ static const char *cmds[CMD_END]={
     "SEXIST",
     "BEG",
     "END",
-    "ROLLBACK"
+    "ROLLBACK",
+    "CLEAN_CACHE",
 };
 
 typedef enum RETCODE
@@ -216,6 +218,7 @@ private:
     string Exec_Cmd_Eevent_Beg(Msg& msg);
     string Exec_Cmd_End(Msg& msg);
     string Exec_Cmd_RollBack(Msg& msg);
+    string Exec_Cmd_Clean_Cache(Msg& msg);
 
 
     void BackUp();

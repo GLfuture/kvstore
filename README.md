@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-07 11:26:14
+ * @LastEditTime: 2023-10-08 01:07:57
 -->
 <<<<<<< HEAD
 # kvstore
@@ -56,12 +56,13 @@ SCOUNT key
 SDELETE key [values..] //返回成功删除value个数
 SEXIST key value
 
-quit //客户端退出
-
 BEG
 
 END //事务
 
+CLEAN CACHE //清除回滚缓存
+
+quit //退出客户端
 
 ======
 ### 线程安全
@@ -75,5 +76,20 @@ END //事务
 3.有一个文件保留不超过file_max_size的命令，以便HISTORY n查看前n次命令
 4.有一个文件存储事务
 
+======
+### 异常情况
+1.解决客户端断开却还有命令没有处理的问题
 
-解决客户端断开却还有命令没有处理的问题
+2.解决死锁问题
+
+3.解决Affairs在BEG时未创建的问题
+
+4.对TCP粘包进行处理(规定协议，协议头中包含长度信息)
+
+5.解决string遇\0截断错误
+
+6.BackUp浅拷贝问题
+
+========
+### 后续优化
+可以将解析命令放在客户端处理完毕由协议带给服务器，减少数据库压力

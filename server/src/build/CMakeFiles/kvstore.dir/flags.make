@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/gong/projects/kvstore/server/src/../include
+CXX_INCLUDES = -I/home/gong/projects/kvstore/server/src/../../thirdparty -I/home/gong/projects/kvstore/server/src/../include
 
 CXX_FLAGS = -std=gnu++20
 

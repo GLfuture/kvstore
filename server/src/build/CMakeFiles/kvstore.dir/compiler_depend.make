@@ -345,19 +345,19 @@ CMakeFiles/kvstore.dir/app.cc.o: /home/gong/projects/kvstore/server/src/app.cc \
   /home/gong/projects/kvstore/server/include/thread_pool/ThreadPool.hpp \
   /usr/include/c++/12/thread \
   /home/gong/projects/kvstore/server/include/split/split.hpp \
-  /home/gong/projects/kvstore/server/include/spdlog/spdlog.h \
-  /home/gong/projects/kvstore/server/include/spdlog/common.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/null_mutex.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/spdlog.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/common.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/null_mutex.h \
   /usr/include/c++/12/utility \
   /usr/include/c++/12/bits/stl_relops.h \
-  /home/gong/projects/kvstore/server/include/spdlog/tweakme.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/fmt.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/core.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/tweakme.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/fmt.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/core.h \
   /usr/include/c++/12/cstddef \
   /usr/include/c++/12/cstring \
   /usr/include/c++/12/iterator \
   /usr/include/c++/12/bits/stream_iterator.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h \
   /usr/include/c++/12/cmath \
   /usr/include/math.h \
   /usr/include/x86_64-linux-gnu/bits/math-vector.h \
@@ -382,8 +382,8 @@ CMakeFiles/kvstore.dir/app.cc.o: /home/gong/projects/kvstore/server/src/app.cc \
   /usr/include/c++/12/tr1/poly_hermite.tcc \
   /usr/include/c++/12/tr1/poly_laguerre.tcc \
   /usr/include/c++/12/tr1/riemann_zeta.tcc \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/core.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/core.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format-inl.h \
   /usr/include/c++/12/algorithm \
   /usr/include/c++/12/bits/ranges_algo.h \
   /usr/include/c++/12/bits/ranges_util.h \
@@ -397,22 +397,22 @@ CMakeFiles/kvstore.dir/app.cc.o: /home/gong/projects/kvstore/server/src/app.cc \
   /usr/include/c++/12/bits/codecvt.h \
   /usr/include/c++/12/bits/locale_facets_nonio.tcc \
   /usr/include/c++/12/bits/locale_conv.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format.h \
-  /home/gong/projects/kvstore/server/include/spdlog/common-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/registry.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/periodic_worker.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/periodic_worker-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/registry-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/logger.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/backtracer.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/circular_q.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/common-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/registry.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/periodic_worker.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/periodic_worker-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/registry-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/logger.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/backtracer.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/circular_q.h \
   /usr/include/c++/12/cassert \
   /usr/include/assert.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg_buffer.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/os.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/os-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg_buffer.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/os.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/os-inl.h \
   /usr/include/x86_64-linux-gnu/sys/stat.h \
   /usr/include/x86_64-linux-gnu/bits/statx.h \
   /usr/include/linux/stat.h \
@@ -423,21 +423,21 @@ CMakeFiles/kvstore.dir/app.cc.o: /home/gong/projects/kvstore/server/src/app.cc \
   /usr/include/x86_64-linux-gnu/bits/statx-generic.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_statx_timestamp.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_statx.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg_buffer-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/backtracer-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/logger-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/pattern_formatter.h \
-  /home/gong/projects/kvstore/server/include/spdlog/formatter.h \
-  /home/gong/projects/kvstore/server/include/spdlog/pattern_formatter-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/fmt_helper.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/sink.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/sink-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/ansicolor_sink.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/console_globals.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/ansicolor_sink-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/synchronous_factory.h \
-  /home/gong/projects/kvstore/server/include/spdlog/version.h \
-  /home/gong/projects/kvstore/server/include/spdlog/spdlog-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg_buffer-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/backtracer-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/logger-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/pattern_formatter.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/formatter.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/pattern_formatter-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/fmt_helper.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/sink.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/sink-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/ansicolor_sink.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/console_globals.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/ansicolor_sink-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/synchronous_factory.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/version.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/spdlog-inl.h \
   /usr/include/c++/12/span
 
 CMakeFiles/kvstore.dir/config.cc.o: /home/gong/projects/kvstore/server/src/config.cc \
@@ -671,8 +671,8 @@ CMakeFiles/kvstore.dir/config.cc.o: /home/gong/projects/kvstore/server/src/confi
   /usr/include/c++/12/bits/fs_ops.h \
   /usr/include/string.h \
   /usr/include/strings.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/yaml.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/parser.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/yaml.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/parser.h \
   /usr/include/c++/12/memory \
   /usr/include/c++/12/bits/stl_tempbuf.h \
   /usr/include/c++/12/bits/stl_raw_storage_iter.h \
@@ -710,8 +710,8 @@ CMakeFiles/kvstore.dir/config.cc.o: /home/gong/projects/kvstore/server/src/confi
   /usr/include/c++/12/bits/uses_allocator_args.h \
   /usr/include/c++/12/pstl/glue_memory_defs.h \
   /usr/include/c++/12/pstl/execution_defs.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/dll.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/emitter.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/dll.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/emitter.h \
   /usr/include/c++/12/cmath \
   /usr/include/math.h \
   /usr/include/x86_64-linux-gnu/bits/math-vector.h \
@@ -737,17 +737,17 @@ CMakeFiles/kvstore.dir/config.cc.o: /home/gong/projects/kvstore/server/src/confi
   /usr/include/c++/12/tr1/poly_laguerre.tcc \
   /usr/include/c++/12/tr1/riemann_zeta.tcc \
   /usr/include/c++/12/cstddef \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/binary.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/binary.h \
   /usr/include/c++/12/vector \
   /usr/include/c++/12/bits/stl_vector.h \
   /usr/include/c++/12/bits/stl_bvector.h \
   /usr/include/c++/12/bits/vector.tcc \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/emitterdef.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/emittermanip.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/null.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/ostream_wrapper.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/emitterstyle.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/stlemitter.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/emitterdef.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/emittermanip.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/null.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/ostream_wrapper.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/emitterstyle.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/stlemitter.h \
   /usr/include/c++/12/list \
   /usr/include/c++/12/bits/stl_list.h \
   /usr/include/c++/12/bits/list.tcc \
@@ -760,28 +760,28 @@ CMakeFiles/kvstore.dir/config.cc.o: /home/gong/projects/kvstore/server/src/confi
   /usr/include/c++/12/map \
   /usr/include/c++/12/bits/stl_map.h \
   /usr/include/c++/12/bits/stl_multimap.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/exceptions.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/mark.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/noexcept.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/traits.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/exceptions.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/mark.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/noexcept.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/traits.h \
   /usr/include/c++/12/utility \
   /usr/include/c++/12/bits/stl_relops.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/node.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/iterator_fwd.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/ptr.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/type.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/impl.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/memory.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node_ref.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node_data.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node_iterator.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/node.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/iterator_fwd.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/ptr.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/type.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/impl.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/memory.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node_ref.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node_data.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node_iterator.h \
   /usr/include/c++/12/iterator \
   /usr/include/c++/12/bits/stream_iterator.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/iterator.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/iterator.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/iterator.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/iterator.h \
   /usr/include/c++/12/atomic \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/convert.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/convert.h \
   /usr/include/c++/12/array \
   /usr/include/c++/12/unordered_map \
   /usr/include/c++/12/bits/hashtable.h \
@@ -806,54 +806,54 @@ CMakeFiles/kvstore.dir/config.cc.o: /home/gong/projects/kvstore/server/src/confi
   /usr/include/c++/12/bits/gslice_array.h \
   /usr/include/c++/12/bits/mask_array.h \
   /usr/include/c++/12/bits/indirect_array.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/impl.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/parse.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/emit.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/impl.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/parse.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/emit.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h \
   /usr/include/c++/12/cstring \
   /usr/include/inttypes.h \
   /usr/include/c++/12/cassert \
   /usr/include/assert.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/document.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/reader.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/allocators.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/stream.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/encodings.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/encodedstream.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/memorystream.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/meta.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/stack.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/allocators.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/swap.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/strtod.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/ieee754.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/biginteger.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/diyfp.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/pow10.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/error/error.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/strfunc.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/stream.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h \
-  /home/gong/projects/kvstore/server/include/spdlog/spdlog.h \
-  /home/gong/projects/kvstore/server/include/spdlog/common.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/null_mutex.h \
-  /home/gong/projects/kvstore/server/include/spdlog/tweakme.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/document.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/reader.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/allocators.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/stream.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/encodings.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/encodedstream.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/memorystream.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/meta.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/stack.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/allocators.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/swap.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/strtod.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/ieee754.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/biginteger.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/diyfp.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/pow10.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/error/error.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/strfunc.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/stream.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/spdlog.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/common.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/null_mutex.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/tweakme.h \
   /usr/include/c++/12/chrono \
   /usr/include/c++/12/functional \
   /usr/include/c++/12/bits/std_function.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/fmt.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/core.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/core.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/fmt.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/core.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/core.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format-inl.h \
   /usr/include/c++/12/cstdarg \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format.h \
-  /home/gong/projects/kvstore/server/include/spdlog/common-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/registry.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/periodic_worker.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/common-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/registry.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/periodic_worker.h \
   /usr/include/c++/12/condition_variable \
   /usr/include/c++/12/bits/unique_lock.h \
   /usr/include/c++/12/stop_token \
@@ -867,16 +867,16 @@ CMakeFiles/kvstore.dir/config.cc.o: /home/gong/projects/kvstore/server/src/confi
   /usr/include/x86_64-linux-gnu/bits/semaphore.h \
   /usr/include/c++/12/mutex \
   /usr/include/c++/12/thread \
-  /home/gong/projects/kvstore/server/include/spdlog/details/periodic_worker-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/registry-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/logger.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/backtracer.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/circular_q.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg_buffer.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/os.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/os-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/periodic_worker-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/registry-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/logger.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/backtracer.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/circular_q.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg_buffer.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/os.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/os-inl.h \
   /usr/include/x86_64-linux-gnu/sys/stat.h \
   /usr/include/x86_64-linux-gnu/bits/stat.h \
   /usr/include/x86_64-linux-gnu/bits/struct_stat.h \
@@ -901,21 +901,21 @@ CMakeFiles/kvstore.dir/config.cc.o: /home/gong/projects/kvstore/server/src/confi
   /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
   /usr/include/linux/falloc.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg_buffer-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/backtracer-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/logger-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/pattern_formatter.h \
-  /home/gong/projects/kvstore/server/include/spdlog/formatter.h \
-  /home/gong/projects/kvstore/server/include/spdlog/pattern_formatter-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/fmt_helper.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/sink.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/sink-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/ansicolor_sink.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/console_globals.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/ansicolor_sink-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/synchronous_factory.h \
-  /home/gong/projects/kvstore/server/include/spdlog/version.h \
-  /home/gong/projects/kvstore/server/include/spdlog/spdlog-inl.h
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg_buffer-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/backtracer-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/logger-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/pattern_formatter.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/formatter.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/pattern_formatter-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/fmt_helper.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/sink.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/sink-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/ansicolor_sink.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/console_globals.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/ansicolor_sink-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/synchronous_factory.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/version.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/spdlog-inl.h
 
 CMakeFiles/kvstore.dir/fileio.cc.o: /home/gong/projects/kvstore/server/src/fileio.cc \
   /usr/include/stdc-predef.h \
@@ -1493,19 +1493,19 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /home/gong/projects/kvstore/server/include/thread_pool/ThreadPool.hpp \
   /usr/include/c++/12/thread \
   /home/gong/projects/kvstore/server/include/split/split.hpp \
-  /home/gong/projects/kvstore/server/include/spdlog/spdlog.h \
-  /home/gong/projects/kvstore/server/include/spdlog/common.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/null_mutex.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/spdlog.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/common.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/null_mutex.h \
   /usr/include/c++/12/utility \
   /usr/include/c++/12/bits/stl_relops.h \
-  /home/gong/projects/kvstore/server/include/spdlog/tweakme.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/fmt.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/core.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/tweakme.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/fmt.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/core.h \
   /usr/include/c++/12/cstddef \
   /usr/include/c++/12/cstring \
   /usr/include/c++/12/iterator \
   /usr/include/c++/12/bits/stream_iterator.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h \
   /usr/include/c++/12/cmath \
   /usr/include/math.h \
   /usr/include/x86_64-linux-gnu/bits/math-vector.h \
@@ -1530,8 +1530,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /usr/include/c++/12/tr1/poly_hermite.tcc \
   /usr/include/c++/12/tr1/poly_laguerre.tcc \
   /usr/include/c++/12/tr1/riemann_zeta.tcc \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/core.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/core.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format-inl.h \
   /usr/include/c++/12/algorithm \
   /usr/include/c++/12/bits/ranges_algo.h \
   /usr/include/c++/12/bits/ranges_util.h \
@@ -1545,22 +1545,22 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /usr/include/c++/12/bits/codecvt.h \
   /usr/include/c++/12/bits/locale_facets_nonio.tcc \
   /usr/include/c++/12/bits/locale_conv.h \
-  /home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format.h \
-  /home/gong/projects/kvstore/server/include/spdlog/common-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/registry.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/periodic_worker.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/periodic_worker-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/registry-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/logger.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/backtracer.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/circular_q.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/common-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/registry.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/periodic_worker.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/periodic_worker-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/registry-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/logger.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/backtracer.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/circular_q.h \
   /usr/include/c++/12/cassert \
   /usr/include/assert.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg_buffer.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/os.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/os-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg_buffer.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/os.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/os-inl.h \
   /usr/include/x86_64-linux-gnu/sys/stat.h \
   /usr/include/x86_64-linux-gnu/bits/statx.h \
   /usr/include/linux/stat.h \
@@ -1571,21 +1571,21 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /usr/include/x86_64-linux-gnu/bits/statx-generic.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_statx_timestamp.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_statx.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/log_msg_buffer-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/backtracer-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/logger-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/pattern_formatter.h \
-  /home/gong/projects/kvstore/server/include/spdlog/formatter.h \
-  /home/gong/projects/kvstore/server/include/spdlog/pattern_formatter-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/fmt_helper.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/sink.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/sink-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/ansicolor_sink.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/console_globals.h \
-  /home/gong/projects/kvstore/server/include/spdlog/sinks/ansicolor_sink-inl.h \
-  /home/gong/projects/kvstore/server/include/spdlog/details/synchronous_factory.h \
-  /home/gong/projects/kvstore/server/include/spdlog/version.h \
-  /home/gong/projects/kvstore/server/include/spdlog/spdlog-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg_buffer-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/backtracer-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/logger-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/pattern_formatter.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/formatter.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/pattern_formatter-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/fmt_helper.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/sink.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/sink-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/ansicolor_sink.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/console_globals.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/sinks/ansicolor_sink-inl.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/details/synchronous_factory.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/version.h \
+  /home/gong/projects/kvstore/thirdparty/spdlog/spdlog-inl.h \
   /usr/include/c++/12/span \
   /home/gong/projects/kvstore/server/include/config/config.h \
   /usr/include/c++/12/fstream \
@@ -1600,34 +1600,34 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /usr/include/c++/12/codecvt \
   /usr/include/c++/12/bits/fs_dir.h \
   /usr/include/c++/12/bits/fs_ops.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/yaml.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/parser.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/dll.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/emitter.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/binary.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/emitterdef.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/emittermanip.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/null.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/ostream_wrapper.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/emitterstyle.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/stlemitter.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/exceptions.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/mark.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/noexcept.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/traits.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/node.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/iterator_fwd.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/ptr.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/type.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/impl.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/memory.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node_ref.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node_data.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node_iterator.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/iterator.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/iterator.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/convert.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/yaml.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/parser.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/dll.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/emitter.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/binary.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/emitterdef.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/emittermanip.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/null.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/ostream_wrapper.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/emitterstyle.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/stlemitter.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/exceptions.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/mark.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/noexcept.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/traits.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/node.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/iterator_fwd.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/ptr.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/type.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/impl.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/memory.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node_ref.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node_data.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node_iterator.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/iterator.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/iterator.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/convert.h \
   /usr/include/c++/12/valarray \
   /usr/include/c++/12/bits/valarray_array.h \
   /usr/include/c++/12/bits/valarray_array.tcc \
@@ -1638,57 +1638,59 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /usr/include/c++/12/bits/gslice_array.h \
   /usr/include/c++/12/bits/mask_array.h \
   /usr/include/c++/12/bits/indirect_array.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/impl.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/parse.h \
-  /home/gong/projects/kvstore/server/include/yaml-cpp/node/emit.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/impl.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/parse.h \
+  /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/emit.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h \
   /usr/include/inttypes.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/document.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/reader.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/allocators.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/stream.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/encodings.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/encodedstream.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/memorystream.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/meta.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/stack.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/allocators.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/swap.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/strtod.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/ieee754.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/biginteger.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/diyfp.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/pow10.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/error/error.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/internal/strfunc.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/stream.h \
-  /home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h
+  /home/gong/projects/kvstore/thirdparty/rapidjson/document.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/reader.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/allocators.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/stream.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/encodings.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/encodedstream.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/memorystream.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/meta.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/stack.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/allocators.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/swap.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/strtod.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/ieee754.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/biginteger.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/diyfp.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/pow10.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/error/error.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/internal/strfunc.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/stream.h \
+  /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h
 
 
 /home/gong/projects/kvstore/server/include/fileio/fileio.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/internal/strfunc.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/internal/strfunc.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/internal/ieee754.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/internal/ieee754.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/internal/strtod.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/internal/swap.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/memorystream.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/internal/stack.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/encodedstream.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/internal/meta.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/encodings.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/encodedstream.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/stream.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/encodings.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/rapidjson.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/stream.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/emit.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/document.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/impl.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/emit.h:
 
 /usr/include/c++/12/bits/mask_array.h:
 
@@ -1700,33 +1702,41 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/valarray:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/iterator.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/convert.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node_ref.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node_iterator.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node_ref.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/memory.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/impl.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/impl.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/iterator_fwd.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/iterator_fwd.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/noexcept.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/node.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/exceptions.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/traits.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/ostream_wrapper.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/noexcept.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/null.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/mark.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/emittermanip.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/emitterstyle.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/emitterdef.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/null.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/emitter.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/internal/biginteger.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/parser.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/iterator.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/emittermanip.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/emitterdef.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/dll.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/parser.h:
 
 /usr/include/c++/12/bits/fs_dir.h:
 
@@ -1738,25 +1748,27 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/fstream:
 
-/home/gong/projects/kvstore/server/include/spdlog/spdlog-inl.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/spdlog-inl.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/version.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/details/synchronous_factory.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/synchronous_factory.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/sinks/sink-inl.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/fmt_helper.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/details/fmt_helper.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/formatter.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/pattern_formatter-inl.h:
 
 /usr/include/x86_64-linux-gnu/bits/statx-generic.h:
 
 /usr/include/x86_64-linux-gnu/sys/stat.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/internal/stack.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/pattern_formatter.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/log_msg-inl.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/details/os-inl.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/log_msg.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg_buffer.h:
 
 /usr/include/c++/12/span:
 
@@ -1764,15 +1776,17 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/cassert:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/periodic_worker.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/logger.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/common-inl.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/details/periodic_worker-inl.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/details/periodic_worker.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/details/registry.h:
 
 /usr/include/x86_64-linux-gnu/asm/types.h:
 
 /usr/include/c++/12/bits/locale_facets_nonio.tcc:
-
-/home/gong/projects/kvstore/server/include/rapidjson/internal/pow10.h:
 
 /usr/include/c++/12/locale:
 
@@ -1782,15 +1796,15 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/ranges_algo.h:
 
+/home/gong/projects/kvstore/thirdparty/spdlog/logger-inl.h:
+
 /usr/include/c++/12/algorithm:
 
-/home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format-inl.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/binary.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/type.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format-inl.h:
 
 /usr/include/c++/12/tr1/poly_laguerre.tcc:
-
-/home/gong/projects/kvstore/server/include/rapidjson/error/error.h:
 
 /usr/include/c++/12/tr1/poly_hermite.tcc:
 
@@ -1802,8 +1816,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/tr1/beta_function.tcc:
 
-/usr/include/c++/12/tr1/special_function_util.h:
-
 /usr/include/linux/stat.h:
 
 /usr/include/c++/12/tr1/gamma.tcc:
@@ -1811,6 +1823,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/c++/12/bits/specfun.h:
 
 /usr/include/x86_64-linux-gnu/bits/iscanonical.h:
+
+/home/gong/projects/kvstore/thirdparty/rapidjson/allocators.h:
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls.h:
 
@@ -1820,21 +1834,29 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/fp-logb.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/mark.h:
-
 /usr/include/c++/12/bits/fs_fwd.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/formatter.h:
 
 /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h:
 
+/home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h:
+
+/usr/include/c++/12/tr1/special_function_util.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/core.h:
+
 /usr/include/x86_64-linux-gnu/bits/math-vector.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/tweakme.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/fmt/fmt.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/tweakme.h:
 
 /usr/include/c++/12/bits/stl_relops.h:
 
 /usr/include/c++/12/utility:
 
-/home/gong/projects/kvstore/server/include/spdlog/common.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/details/null_mutex.h:
 
 /usr/include/inttypes.h:
 
@@ -1844,13 +1866,19 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/stack:
 
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/ptr.h:
+
 /usr/include/c++/12/bits/deque.tcc:
 
 /usr/include/c++/12/shared_mutex:
 
 /usr/include/c++/12/bits/unordered_set.h:
 
+/home/gong/projects/kvstore/thirdparty/spdlog/version.h:
+
 /usr/include/c++/12/bits/list.tcc:
+
+/home/gong/projects/kvstore/thirdparty/rapidjson/memorystream.h:
 
 /usr/include/c++/12/bits/stl_list.h:
 
@@ -1866,13 +1894,9 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/semaphore.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/format.h:
-
 /usr/include/x86_64-linux-gnu/sys/time.h:
 
 /usr/include/c++/12/bits/this_thread_sleep.h:
-
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node_iterator.h:
 
 /usr/include/c++/12/bits/semaphore_base.h:
 
@@ -1888,13 +1912,13 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/stat.h:
 
+/home/gong/projects/kvstore/thirdparty/spdlog/sinks/sink.h:
+
 /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h:
 
 /usr/include/fcntl.h:
 
 /usr/include/x86_64-linux-gnu/sys/epoll.h:
-
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/parse.h:
 
 /usr/include/libintl.h:
 
@@ -1909,8 +1933,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/c++/12/array:
 
 /usr/include/c++/12/bits/stl_bvector.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/details/log_msg_buffer.h:
 
 /usr/include/c++/12/bits/stl_vector.h:
 
@@ -1934,10 +1956,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/strings.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/os.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/details/periodic_worker-inl.h:
-
 /usr/include/string.h:
 
 /home/gong/projects/kvstore/server/include/network/conn.h:
@@ -1951,6 +1969,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/c++/12/pstl/execution_defs.h:
 
 /usr/include/c++/12/pstl/glue_memory_defs.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg_buffer-inl.h:
 
 /usr/include/c++/12/bits/uses_allocator_args.h:
 
@@ -1968,11 +1988,9 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/asm/unistd_64.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/sinks/sink-inl.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/common.h:
 
 /usr/include/x86_64-linux-gnu/sys/syscall.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/sinks/sink.h:
 
 /usr/include/c++/12/pstl/pstl_config.h:
 
@@ -2006,7 +2024,9 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/sys/single_threaded.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/reader.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/reader.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/memory.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
 
@@ -2020,17 +2040,15 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/internal/diyfp.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/pattern_formatter.h:
-
 /usr/include/c++/12/bits/range_access.h:
 
 /usr/include/c++/12/bits/postypes.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/details/os.h:
 
 /usr/include/x86_64-linux-gnu/bits/sched.h:
 
@@ -2039,6 +2057,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/c++/12/bits/locale_facets.tcc:
 
 /usr/include/c++/12/bits/stl_iterator.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/type.h:
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
 
@@ -2076,13 +2096,9 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/localefwd.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/iterator.h:
-
 /usr/include/c++/12/cctype:
 
 /usr/include/c++/12/stdexcept:
-
-/home/gong/projects/kvstore/server/include/spdlog/sinks/ansicolor_sink-inl.h:
 
 /usr/include/c++/12/istream:
 
@@ -2090,7 +2106,7 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/types/FILE.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/sinks/ansicolor_sink.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/common-inl.h:
 
 /usr/include/x86_64-linux-gnu/bits/timex.h:
 
@@ -2110,6 +2126,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/valarray_before.h:
 
+/home/gong/projects/kvstore/thirdparty/spdlog/details/circular_q.h:
+
 /usr/include/c++/12/bits/stl_iterator_base_types.h:
 
 /usr/include/x86_64-linux-gnu/bits/uio_lim.h:
@@ -2118,15 +2136,11 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/detail/node_data.h:
-
 /usr/include/c++/12/compare:
 
 /usr/include/c++/12/bits/stream_iterator.h:
 
 /usr/include/c++/12/ios:
-
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/ptr.h:
 
 /usr/include/c++/12/bits/stl_tree.h:
 
@@ -2134,17 +2148,11 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/unistd.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/null_mutex.h:
-
 /usr/include/c++/12/debug/assertions.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/details/registry.h:
 
 /usr/include/c++/12/exception:
 
 /usr/include/x86_64-linux-gnu/bits/types/timer_t.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/details/backtracer-inl.h:
 
 /home/gong/projects/kvstore/server/include/network/netlib.h:
 
@@ -2159,6 +2167,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/x86_64-linux-gnu/bits/endianness.h:
 
 /home/gong/projects/kvstore/server/src/app.cc:
+
+/home/gong/projects/kvstore/thirdparty/rapidjson/internal/strtod.h:
 
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
 
@@ -2202,13 +2212,15 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/cxxabi_init_exception.h:
 
-/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/exceptions.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/internal/meta.h:
+/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
 /usr/include/x86_64-linux-gnu/bits/types.h:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/sinks/ansicolor_sink-inl.h:
 
 /usr/include/c++/12/bits/exception_ptr.h:
 
@@ -2216,13 +2228,11 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/sockaddr.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/document.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/emitter.h:
 
 /usr/include/c++/12/new:
 
 /usr/include/features.h:
-
-/home/gong/projects/kvstore/server/include/yaml-cpp/traits.h:
 
 /usr/include/c++/12/bits/invoke.h:
 
@@ -2246,6 +2256,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/netinet/in.h:
 
+/home/gong/projects/kvstore/thirdparty/spdlog/details/backtracer-inl.h:
+
 /usr/include/c++/12/cmath:
 
 /usr/include/c++/12/stop_token:
@@ -2253,10 +2265,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
-
-/home/gong/projects/kvstore/server/include/yaml-cpp/yaml.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/fmt/bundled/core.h:
 
 /usr/include/c++/12/bits/atomic_base.h:
 
@@ -2282,9 +2290,9 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/linux/errno.h:
 
-/home/gong/projects/kvstore/server/include/network/server.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/details/backtracer.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/convert.h:
+/home/gong/projects/kvstore/server/include/network/server.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
 
@@ -2330,13 +2338,9 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/cwchar:
 
-/home/gong/projects/kvstore/server/include/rapidjson/allocators.h:
-
 /usr/include/wchar.h:
 
 /usr/include/c++/12/cstdint:
-
-/home/gong/projects/kvstore/server/include/rapidjson/internal/biginteger.h:
 
 /usr/include/c++/12/ext/atomicity.h:
 
@@ -2349,6 +2353,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
 
 /usr/include/c++/12/bits/atomic_wait.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/iterator.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
@@ -2364,6 +2370,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
 
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/stlemitter.h:
+
 /usr/include/c++/12/ext/numeric_traits.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
@@ -2372,21 +2380,13 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /home/gong/projects/kvstore/server/src/fileio.cc:
 
+/home/gong/projects/kvstore/thirdparty/spdlog/details/console_globals.h:
+
 /usr/include/c++/12/bits/exception_defines.h:
-
-/home/gong/projects/kvstore/server/include/yaml-cpp/node/node.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/details/log_msg_buffer-inl.h:
 
 /usr/include/c++/12/backward/binders.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/logger-inl.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/spdlog.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/details/circular_q.h:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h:
 
@@ -2394,7 +2394,7 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/asm/errno.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/backtracer.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/parse.h:
 
 /usr/include/c++/12/typeinfo:
 
@@ -2424,13 +2424,13 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/shared_ptr.h:
 
+/home/gong/projects/kvstore/thirdparty/spdlog/details/registry-inl.h:
+
 /usr/include/x86_64-linux-gnu/bits/xopen_lim.h:
 
 /usr/include/c++/12/ext/alloc_traits.h:
 
 /usr/include/stdio.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/logger.h:
 
 /usr/include/c++/12/bits/ranges_base.h:
 
@@ -2448,7 +2448,7 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/ext/string_conversions.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/fmt/fmt.h:
+/home/gong/projects/kvstore/thirdparty/spdlog/sinks/ansicolor_sink.h:
 
 /usr/include/c++/12/bits/alloc_traits.h:
 
@@ -2464,11 +2464,15 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/ostream_wrapper.h:
+
 /usr/include/c++/12/future:
 
 /usr/include/x86_64-linux-gnu/bits/waitstatus.h:
 
 /usr/include/x86_64-linux-gnu/sys/types.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/spdlog.h:
 
 /usr/include/c++/12/bits/predefined_ops.h:
 
@@ -2494,7 +2498,7 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/pattern_formatter-inl.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/error/error.h:
 
 /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h:
 
@@ -2517,6 +2521,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/c++/12/bits/istream.tcc:
 
 /usr/include/asm-generic/errno.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/details/log_msg-inl.h:
 
 /usr/include/c++/12/queue:
 
@@ -2544,6 +2550,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/streambuf.tcc:
 
+/home/gong/projects/kvstore/thirdparty/rapidjson/internal/diyfp.h:
+
 /usr/include/c++/12/sstream:
 
 /usr/include/c++/12/bits/basic_ios.h:
@@ -2552,15 +2560,13 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/locale_facets.h:
 
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/impl.h:
+
 /usr/include/c++/12/bits/ostream.tcc:
 
 /usr/include/c++/12/bits/functional_hash.h:
 
 /usr/include/c++/12/tuple:
-
-/home/gong/projects/kvstore/server/include/yaml-cpp/emitterstyle.h:
-
-/home/gong/projects/kvstore/server/include/yaml-cpp/dll.h:
 
 /usr/include/c++/12/tr1/hypergeometric.tcc:
 
@@ -2576,8 +2582,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/basic_ios.tcc:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/registry-inl.h:
-
 /usr/include/x86_64-linux-gnu/c++/12/bits/time_members.h:
 
 /usr/include/x86_64-linux-gnu/sys/socket.h:
@@ -2591,6 +2595,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/c++/12/bits/atomic_lockfree_defines.h:
 
 /usr/include/x86_64-linux-gnu/bits/socket_type.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/yaml.h:
 
 /usr/include/linux/posix_types.h:
 
@@ -2616,8 +2622,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/binary.h:
-
 /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h:
 
 /usr/include/linux/falloc.h:
@@ -2642,8 +2646,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/linux/close_range.h:
 
-/home/gong/projects/kvstore/server/include/spdlog/details/console_globals.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
@@ -2654,7 +2656,7 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/ext/aligned_buffer.h:
 
-/home/gong/projects/kvstore/server/include/rapidjson/internal/swap.h:
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/node/detail/node_data.h:
 
 /usr/include/c++/12/condition_variable:
 
@@ -2667,8 +2669,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/c++/12/bits/stl_uninitialized.h:
 
 /usr/include/c++/12/bits/stl_raw_storage_iter.h:
-
-/home/gong/projects/kvstore/server/include/spdlog/details/os-inl.h:
 
 /usr/include/c++/12/unordered_set:
 
@@ -2690,6 +2690,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/c++/12/bits/shared_ptr_atomic.h:
 
-/home/gong/projects/kvstore/server/include/yaml-cpp/stlemitter.h:
+/home/gong/projects/kvstore/thirdparty/rapidjson/internal/pow10.h:
 
 /usr/include/c++/12/climits:
