@@ -1,0 +1,1 @@
+/usr/bin/c++ "CMakeFiles/kvstore-cli.dir/kvstore-cli.cc.o" "CMakeFiles/kvstore-cli.dir/config.cc.o" -o kvstore-cli   -L/home/gong/projects/kvstore/client/src/../lib  -Wl,-rpath,/home/gong/projects/kvstore/client/src/../lib: -lyaml-cpp -lspdlog 

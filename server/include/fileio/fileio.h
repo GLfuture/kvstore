@@ -1,40 +1,85 @@
 /*
- * @Description: 文件IO
+ * @Description: 
  * @Version: 1.0
  * @Author: Gong
- * @Date: 2023-09-30 14:02:28
+ * @Date: 2023-10-09 11:32:25
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-01 06:05:35
+ * @LastEditTime: 2023-10-10 09:07:33
  */
 #pragma once
 #include <iostream>
-#include <fstream>
 #include <string>
-#include <filesystem>
+#include <fstream>
+#include <fcntl.h>
+#include <unistd.h>
 #include <string.h>
+#include <sys/mman.h>
+#include <filesystem>
+//加载过程不存在多线程，没必要使用原子变量
+//#include <atomic>
 
-class FileIO_Base
+class File_IO_Base
 {
 public:
-    FileIO_Base(const std::string& path);
-    virtual int Read(std::string& content) = 0;
-    virtual int Write(const std::string& buffer) = 0;
-    virtual ~FileIO_Base() = default;
+    enum FILE_IO_FORM {
+        STREAM,
+        MMAP,
+    };
+
+    File_IO_Base(){};
+    File_IO_Base(const std::string filename);
+    const std::string get_filename();
+    virtual int open(FILE_IO_FORM form , const std::string&& filename) = 0;
+    virtual const char* read(FILE_IO_FORM form, size_t len) = 0;
+    virtual int write(const std::string &&content) = 0;
+    virtual int close(FILE_IO_FORM form ) = 0;
+    virtual bool exist(const std::string& filename) = 0;
+    virtual uintmax_t size(const std::string& filename) = 0;
 protected:
-    std::string _path;
+    std::string filename;
+    std::shared_ptr<std::fstream> stream;
+    int fd;
+    loff_t offset;
 };
 
-class File_IO:public FileIO_Base
+
+class File_IO : public File_IO_Base
 {
 public:
-    File_IO(const std::string& path);
-    int Read(std::string& content) override;
-    int Write(const std::string& buffer) override;
+    File_IO(const std::string filename,const std::string back_filename) :File_IO_Base(filename) {
+        this->back_filename = back_filename;
+        this->Is_Loading = false;
+    }
 
-    const std::ifstream& Get_Read_Stream_Obj() { return this->_read_in;  }
+    File_IO(const File_IO*& other)
+    {
+        this->filename = other->filename;
+        this->fd = other->fd;
+        this->offset = other->offset;
+        this->stream = std::move(other->stream);
+        this->back_filename = other->back_filename;
+        this->Is_Loading = other->Is_Loading;
+    }
 
-private:
-    std::string _path;
-    std::ifstream _read_in;
-    std::ofstream _write_out;
+    File_IO(const File_IO&& other)
+    {
+        this->filename = other.filename;
+        this->fd = other.fd;
+        this->offset = other.offset;
+        this->stream = std::move(other.stream);
+        this->back_filename = other.back_filename;
+        this->Is_Loading = other.Is_Loading;
+    }
+
+    int open(FILE_IO_FORM form  ,const std::string&& filename) override;
+    const char* read(FILE_IO_FORM form , size_t len) override;
+    int write(const std::string &&content) override;
+    int close(FILE_IO_FORM form ) override;
+    bool exist(const std::string& filename) override;
+    uintmax_t size(const std::string& filename) override;
+    void reset(FILE_IO_FORM form);
+    
+
+    bool Is_Loading;
+    std::string back_filename;
 };

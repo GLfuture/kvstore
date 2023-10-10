@@ -345,6 +345,33 @@ CMakeFiles/kvstore.dir/app.cc.o: /home/gong/projects/kvstore/server/src/app.cc \
   /home/gong/projects/kvstore/server/include/thread_pool/ThreadPool.hpp \
   /usr/include/c++/12/thread \
   /home/gong/projects/kvstore/server/include/split/split.hpp \
+  /home/gong/projects/kvstore/server/include/fileio/fileio.h \
+  /usr/include/c++/12/fstream \
+  /usr/include/c++/12/bits/codecvt.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h \
+  /usr/include/c++/12/bits/fstream.tcc \
+  /usr/include/x86_64-linux-gnu/sys/mman.h \
+  /usr/include/x86_64-linux-gnu/bits/mman.h \
+  /usr/include/x86_64-linux-gnu/bits/mman-map-flags-generic.h \
+  /usr/include/x86_64-linux-gnu/bits/mman-linux.h \
+  /usr/include/x86_64-linux-gnu/bits/mman-shared.h \
+  /usr/include/x86_64-linux-gnu/bits/mman_ext.h \
+  /usr/include/c++/12/filesystem \
+  /usr/include/c++/12/bits/fs_fwd.h \
+  /usr/include/c++/12/bits/fs_path.h \
+  /usr/include/c++/12/locale \
+  /usr/include/c++/12/bits/locale_facets_nonio.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/time_members.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h \
+  /usr/include/libintl.h \
+  /usr/include/c++/12/bits/locale_facets_nonio.tcc \
+  /usr/include/c++/12/bits/locale_conv.h \
+  /usr/include/c++/12/iomanip \
+  /usr/include/c++/12/bits/quoted_string.h \
+  /usr/include/c++/12/codecvt \
+  /usr/include/c++/12/bits/fs_dir.h \
+  /usr/include/c++/12/bits/fs_ops.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/spdlog.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/common.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/details/null_mutex.h \
@@ -389,14 +416,6 @@ CMakeFiles/kvstore.dir/app.cc.o: /home/gong/projects/kvstore/server/src/app.cc \
   /usr/include/c++/12/bits/ranges_util.h \
   /usr/include/c++/12/pstl/glue_algorithm_defs.h \
   /usr/include/c++/12/cstdarg \
-  /usr/include/c++/12/locale \
-  /usr/include/c++/12/bits/locale_facets_nonio.h \
-  /usr/include/x86_64-linux-gnu/c++/12/bits/time_members.h \
-  /usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h \
-  /usr/include/libintl.h \
-  /usr/include/c++/12/bits/codecvt.h \
-  /usr/include/c++/12/bits/locale_facets_nonio.tcc \
-  /usr/include/c++/12/bits/locale_conv.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/common-inl.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/details/registry.h \
@@ -1113,6 +1132,29 @@ CMakeFiles/kvstore.dir/fileio.cc.o: /home/gong/projects/kvstore/server/src/filei
   /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h \
   /usr/include/c++/12/bits/fstream.tcc \
+  /usr/include/fcntl.h \
+  /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+  /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+  /usr/include/linux/falloc.h \
+  /usr/include/x86_64-linux-gnu/bits/stat.h \
+  /usr/include/x86_64-linux-gnu/bits/struct_stat.h \
+  /usr/include/unistd.h \
+  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+  /usr/include/x86_64-linux-gnu/bits/environments.h \
+  /usr/include/x86_64-linux-gnu/bits/confname.h \
+  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
+  /usr/include/linux/close_range.h \
+  /usr/include/string.h \
+  /usr/include/strings.h \
+  /usr/include/x86_64-linux-gnu/sys/mman.h \
+  /usr/include/x86_64-linux-gnu/bits/mman.h \
+  /usr/include/x86_64-linux-gnu/bits/mman-map-flags-generic.h \
+  /usr/include/x86_64-linux-gnu/bits/mman-linux.h \
+  /usr/include/x86_64-linux-gnu/bits/mman-shared.h \
+  /usr/include/x86_64-linux-gnu/bits/mman_ext.h \
   /usr/include/c++/12/filesystem \
   /usr/include/c++/12/bits/fs_fwd.h \
   /usr/include/c++/12/bits/chrono.h \
@@ -1145,9 +1187,7 @@ CMakeFiles/kvstore.dir/fileio.cc.o: /home/gong/projects/kvstore/server/src/filei
   /usr/include/c++/12/bits/align.h \
   /usr/include/c++/12/bits/stl_uninitialized.h \
   /usr/include/c++/12/bits/fs_dir.h \
-  /usr/include/c++/12/bits/fs_ops.h \
-  /usr/include/string.h \
-  /usr/include/strings.h
+  /usr/include/c++/12/bits/fs_ops.h
 
 CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc \
   /usr/include/stdc-predef.h \
@@ -1493,6 +1533,33 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /home/gong/projects/kvstore/server/include/thread_pool/ThreadPool.hpp \
   /usr/include/c++/12/thread \
   /home/gong/projects/kvstore/server/include/split/split.hpp \
+  /home/gong/projects/kvstore/server/include/fileio/fileio.h \
+  /usr/include/c++/12/fstream \
+  /usr/include/c++/12/bits/codecvt.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h \
+  /usr/include/c++/12/bits/fstream.tcc \
+  /usr/include/x86_64-linux-gnu/sys/mman.h \
+  /usr/include/x86_64-linux-gnu/bits/mman.h \
+  /usr/include/x86_64-linux-gnu/bits/mman-map-flags-generic.h \
+  /usr/include/x86_64-linux-gnu/bits/mman-linux.h \
+  /usr/include/x86_64-linux-gnu/bits/mman-shared.h \
+  /usr/include/x86_64-linux-gnu/bits/mman_ext.h \
+  /usr/include/c++/12/filesystem \
+  /usr/include/c++/12/bits/fs_fwd.h \
+  /usr/include/c++/12/bits/fs_path.h \
+  /usr/include/c++/12/locale \
+  /usr/include/c++/12/bits/locale_facets_nonio.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/time_members.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h \
+  /usr/include/libintl.h \
+  /usr/include/c++/12/bits/locale_facets_nonio.tcc \
+  /usr/include/c++/12/bits/locale_conv.h \
+  /usr/include/c++/12/iomanip \
+  /usr/include/c++/12/bits/quoted_string.h \
+  /usr/include/c++/12/codecvt \
+  /usr/include/c++/12/bits/fs_dir.h \
+  /usr/include/c++/12/bits/fs_ops.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/spdlog.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/common.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/details/null_mutex.h \
@@ -1537,14 +1604,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /usr/include/c++/12/bits/ranges_util.h \
   /usr/include/c++/12/pstl/glue_algorithm_defs.h \
   /usr/include/c++/12/cstdarg \
-  /usr/include/c++/12/locale \
-  /usr/include/c++/12/bits/locale_facets_nonio.h \
-  /usr/include/x86_64-linux-gnu/c++/12/bits/time_members.h \
-  /usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h \
-  /usr/include/libintl.h \
-  /usr/include/c++/12/bits/codecvt.h \
-  /usr/include/c++/12/bits/locale_facets_nonio.tcc \
-  /usr/include/c++/12/bits/locale_conv.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/common-inl.h \
   /home/gong/projects/kvstore/thirdparty/spdlog/details/registry.h \
@@ -1588,18 +1647,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /home/gong/projects/kvstore/thirdparty/spdlog/spdlog-inl.h \
   /usr/include/c++/12/span \
   /home/gong/projects/kvstore/server/include/config/config.h \
-  /usr/include/c++/12/fstream \
-  /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h \
-  /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h \
-  /usr/include/c++/12/bits/fstream.tcc \
-  /usr/include/c++/12/filesystem \
-  /usr/include/c++/12/bits/fs_fwd.h \
-  /usr/include/c++/12/bits/fs_path.h \
-  /usr/include/c++/12/iomanip \
-  /usr/include/c++/12/bits/quoted_string.h \
-  /usr/include/c++/12/codecvt \
-  /usr/include/c++/12/bits/fs_dir.h \
-  /usr/include/c++/12/bits/fs_ops.h \
   /home/gong/projects/kvstore/thirdparty/yaml-cpp/yaml.h \
   /home/gong/projects/kvstore/thirdparty/yaml-cpp/parser.h \
   /home/gong/projects/kvstore/thirdparty/yaml-cpp/dll.h \
@@ -1668,8 +1715,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
   /home/gong/projects/kvstore/thirdparty/rapidjson/rapidjson.h
 
 
-/home/gong/projects/kvstore/server/include/fileio/fileio.h:
-
 /home/gong/projects/kvstore/thirdparty/rapidjson/internal/strfunc.h:
 
 /home/gong/projects/kvstore/thirdparty/rapidjson/internal/ieee754.h:
@@ -1734,21 +1779,7 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /home/gong/projects/kvstore/thirdparty/yaml-cpp/emitterdef.h:
 
-/home/gong/projects/kvstore/thirdparty/yaml-cpp/dll.h:
-
 /home/gong/projects/kvstore/thirdparty/yaml-cpp/parser.h:
-
-/usr/include/c++/12/bits/fs_dir.h:
-
-/usr/include/c++/12/bits/quoted_string.h:
-
-/usr/include/c++/12/bits/fstream.tcc:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h:
-
-/usr/include/c++/12/fstream:
-
-/home/gong/projects/kvstore/thirdparty/spdlog/spdlog-inl.h:
 
 /home/gong/projects/kvstore/thirdparty/spdlog/details/synchronous_factory.h:
 
@@ -1783,12 +1814,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /home/gong/projects/kvstore/thirdparty/spdlog/details/periodic_worker.h:
 
 /home/gong/projects/kvstore/thirdparty/spdlog/details/registry.h:
-
-/usr/include/x86_64-linux-gnu/asm/types.h:
-
-/usr/include/c++/12/bits/locale_facets_nonio.tcc:
-
-/usr/include/c++/12/locale:
 
 /home/gong/projects/kvstore/server/src/config.cc:
 
@@ -1834,12 +1859,6 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /usr/include/x86_64-linux-gnu/bits/fp-logb.h:
 
-/usr/include/c++/12/bits/fs_fwd.h:
-
-/home/gong/projects/kvstore/thirdparty/spdlog/formatter.h:
-
-/usr/include/x86_64-linux-gnu/bits/flt-eval-method.h:
-
 /home/gong/projects/kvstore/thirdparty/spdlog/fmt/bundled/format.h:
 
 /usr/include/c++/12/tr1/special_function_util.h:
@@ -1858,6 +1877,44 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 
 /home/gong/projects/kvstore/thirdparty/spdlog/details/null_mutex.h:
 
+/usr/include/c++/12/bits/fs_dir.h:
+
+/usr/include/c++/12/bits/quoted_string.h:
+
+/usr/include/x86_64-linux-gnu/asm/types.h:
+
+/usr/include/c++/12/bits/locale_facets_nonio.tcc:
+
+/usr/include/c++/12/locale:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/formatter.h:
+
+/usr/include/x86_64-linux-gnu/bits/flt-eval-method.h:
+
+/usr/include/c++/12/bits/fs_fwd.h:
+
+/usr/include/x86_64-linux-gnu/bits/mman_ext.h:
+
+/usr/include/x86_64-linux-gnu/bits/mman-linux.h:
+
+/usr/include/x86_64-linux-gnu/bits/mman-map-flags-generic.h:
+
+/home/gong/projects/kvstore/thirdparty/yaml-cpp/dll.h:
+
+/usr/include/x86_64-linux-gnu/bits/mman.h:
+
+/home/gong/projects/kvstore/thirdparty/spdlog/spdlog-inl.h:
+
+/usr/include/x86_64-linux-gnu/sys/mman.h:
+
+/usr/include/c++/12/bits/fstream.tcc:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h:
+
+/usr/include/c++/12/fstream:
+
+/home/gong/projects/kvstore/server/include/fileio/fileio.h:
+
 /usr/include/inttypes.h:
 
 /home/gong/projects/kvstore/server/include/thread_pool/ThreadPool.hpp:
@@ -1867,6 +1924,8 @@ CMakeFiles/kvstore.dir/main.cc.o: /home/gong/projects/kvstore/server/src/main.cc
 /usr/include/c++/12/stack:
 
 /home/gong/projects/kvstore/thirdparty/yaml-cpp/node/ptr.h:
+
+/usr/include/x86_64-linux-gnu/bits/mman-shared.h:
 
 /usr/include/c++/12/bits/deque.tcc:
 

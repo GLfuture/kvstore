@@ -1,0 +1,1 @@
+/home/gong/projects/kvstore/client/src/build/../../sbin/kvstore-cli

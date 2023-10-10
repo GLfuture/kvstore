@@ -4,12 +4,12 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-08 09:02:18
+ * @LastEditTime: 2023-10-10 08:41:03
  */
 
 #include"app/app.h"
 #include "config/config.h"
-
+#include <cerrno>
 #define THREAD_NUM 8
 #define MAX_CONN_NUM 10
 #define PRORO_VERION "1.0"
@@ -148,7 +148,13 @@ int main(int argc,char*argv[])
             exit(-1);
     }
     
-    APP app(event_num,port,backlog,thread_num,100);
+    APP app(event_num,port,backlog,thread_num,100,"test.txt","aof.bk");
+    int ret = app.Read_AOF_And_Init();
+    if(ret != 0) 
+    {
+        std::cout << std::strerror(ret);
+        exit(-1);
+    }
     std::function<void()> accptcb = std::bind(Accept_cb,app.Get_Reactor());
     std::function<void()> readcb = std::bind(Read_cb,&app,app.Get_Reactor(),std::ref(app.Get_Thread_Pool()));
     std::function<void()> writecb = std::bind(Write_cb,app.Get_Reactor()); 

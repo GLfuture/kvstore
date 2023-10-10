@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-08 01:07:57
+ * @LastEditTime: 2023-10-10 13:37:54
 -->
 <<<<<<< HEAD
 # kvstore
@@ -60,9 +60,12 @@ BEG
 
 END //事务
 
-CLEAN CACHE //清除回滚缓存
+CLEAN.CACHE //清除回滚缓存
+CLEAN.AOF //清除aof文件(本次的aof文件不会直接删除，会被保存到backup.kv，并删除原backup.kv，会在第二次调用该命令彻底删除)
+
 
 quit //退出客户端
+
 
 ======
 ### 线程安全

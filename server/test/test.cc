@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-08 02:56:49
+ * @LastEditTime: 2023-10-10 11:27:15
  */
 #include<iostream>
 #include<netinet/in.h>
@@ -70,82 +70,82 @@ int main(int argc,char *argv[])
     Client_Socket client(SERVER_IP,atoi(argv[1]));
     client.Socket_Init();
     client.Connect();
-    Test(client,Proc_Protocol("SET str 'my best girl friend'"),"OK\r\n","SET",false);
-    Test(client,Proc_Protocol("LEN str"),"19\r\n","LEN",false);
-    Test(client,Proc_Protocol("APPAND str ' is lyj'"),"OK\r\n","APPAND",false);
-    Test(client,Proc_Protocol("GET str"),"my best girl friend is lyj\r\n","GET",false);
-    Test(client,Proc_Protocol("EXIST str"),"EXIST\r\n","EXIST",false);
-    Test(client,Proc_Protocol("EXIST name "),"NOT EXIST\r\n","NOT EXIST",false);
-    Test(client,Proc_Protocol("DELETE str"),"OK\r\n","DELETE",false);
+    Test(client,Proc_Protocol("SET str 'my best girl friend'"),"OK","SET",false);
+    Test(client,Proc_Protocol("LEN str"),"19","LEN",false);
+    Test(client,Proc_Protocol("APPAND str ' is lyj'"),"OK","APPAND",false);
+    Test(client,Proc_Protocol("GET str"),"my best girl friend is lyj","GET",false);
+    Test(client,Proc_Protocol("EXIST str"),"EXIST","EXIST",false);
+    Test(client,Proc_Protocol("EXIST name "),"NOT EXIST","NOT EXIST",false);
+    Test(client,Proc_Protocol("DELETE str"),"OK","DELETE",false);
     
-    Test(client,Proc_Protocol("ASET name king"),"OK\r\n","ASET ONE",false);
-    Test(client,Proc_Protocol("ASET name Darren gzj lyj gzb"),"OK\r\n","ASET More",false);
-    Test(client,Proc_Protocol("AGET name"),"king\r\nDarren\r\ngzj\r\nlyj\r\ngzb\r\n","AGET",false);
-    Test(client,Proc_Protocol("ACOUNT name"),"5\r\n","ACOUNT",false);
-    Test(client,Proc_Protocol("AEXIST name king"),"EXIST\r\n","AEXIST",false);
-    Test(client,Proc_Protocol("AEXIST name GGBond"),"NOT EXIST\r\n","NOT AEXIST",false);
-    Test(client,Proc_Protocol("ADELETE name gzb"),"1\r\n","ADELETE ONE",false);
-    Test(client,Proc_Protocol("ACOUNT name"),"4\r\n","VERIFY LAST COMMAND",false);
-    Test(client,Proc_Protocol("ADELETE name gzj lyj"),"2\r\n","ADELETE MORE",false);
-    Test(client,Proc_Protocol("ACOUNT name"),"2\r\n","VERIFY LAST COMMAND",false);
-    Test(client,Proc_Protocol("ADELETE name"),"2\r\n","ADELETE ALL",false);
-    Test(client,Proc_Protocol("ACOUNT name"),"NO KEY\r\n","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("ASET name king"),"OK","ASET ONE",false);
+    Test(client,Proc_Protocol("ASET name Darren gzj lyj gzb"),"OK","ASET More",false);
+    Test(client,Proc_Protocol("AGET name"),"king\nDarren\ngzj\nlyj\ngzb","AGET",false);
+    Test(client,Proc_Protocol("ACOUNT name"),"5","ACOUNT",false);
+    Test(client,Proc_Protocol("AEXIST name king"),"EXIST","AEXIST",false);
+    Test(client,Proc_Protocol("AEXIST name GGBond"),"NOT EXIST","NOT AEXIST",false);
+    Test(client,Proc_Protocol("ADELETE name gzb"),"1","ADELETE ONE",false);
+    Test(client,Proc_Protocol("ACOUNT name"),"4","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("ADELETE name gzj lyj"),"2","ADELETE MORE",false);
+    Test(client,Proc_Protocol("ACOUNT name"),"2","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("ADELETE name"),"2","ADELETE ALL",false);
+    Test(client,Proc_Protocol("ACOUNT name"),"NO KEY","VERIFY LAST COMMAND",false);
     
-    Test(client,Proc_Protocol("LPUSH test world hello"),"OK\r\n","LPUSH",false);
-    Test(client,Proc_Protocol("LGET test"),"hello\r\nworld\r\n","VERIFY LAST COMMAND",false);
-    Test(client,Proc_Protocol("RPUSH test my name"),"OK\r\n","RPUSH",false);
-    Test(client,Proc_Protocol("LGET test"),"hello\r\nworld\r\nmy\r\nname\r\n","LGET",false);
-    Test(client,Proc_Protocol("LCOUNT test"),"4\r\n","LCOUNT",false);
-    Test(client,Proc_Protocol("LEXIST test my"),"EXIST\r\n","LEXIST",false);
-    Test(client,Proc_Protocol("LEXIST test GGBond"),"NOT EXIST\r\n","NOT LEXIST",false);
-    Test(client,Proc_Protocol("LDELETE test hello"),"1\r\n","LDELETE ONE",false);
-    Test(client,Proc_Protocol("LCOUNT test"),"3\r\n","VERIFY LAST COMMAND",false);
-    Test(client,Proc_Protocol("LDELETE test my name"),"2\r\n","LDELETE MORE",false);
-    Test(client,Proc_Protocol("LCOUNT test"),"1\r\n","VERIFY LAST COMMAND",false);
-    Test(client,Proc_Protocol("LDELETE test"),"1\r\n","LDELETE ALL",false);
-    Test(client,Proc_Protocol("LCOUNT test"),"NO KEY\r\n","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("LPUSH test world hello"),"OK","LPUSH",false);
+    Test(client,Proc_Protocol("LGET test"),"hello\nworld\n","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("RPUSH test my name"),"OK","RPUSH",false);
+    Test(client,Proc_Protocol("LGET test"),"hello\nworld\nmy\nname","LGET",false);
+    Test(client,Proc_Protocol("LCOUNT test"),"4","LCOUNT",false);
+    Test(client,Proc_Protocol("LEXIST test my"),"EXIST","LEXIST",false);
+    Test(client,Proc_Protocol("LEXIST test GGBond"),"NOT EXIST","NOT LEXIST",false);
+    Test(client,Proc_Protocol("LDELETE test hello"),"1","LDELETE ONE",false);
+    Test(client,Proc_Protocol("LCOUNT test"),"3","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("LDELETE test my name"),"2","LDELETE MORE",false);
+    Test(client,Proc_Protocol("LCOUNT test"),"1","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("LDELETE test"),"1","LDELETE ALL",false);
+    Test(client,Proc_Protocol("LCOUNT test"),"NO KEY","VERIFY LAST COMMAND",false);
 
-    Test(client,Proc_Protocol("RSET key girl lyj"),"OK\r\n","RSET ONE",false);
-    Test(client,Proc_Protocol("RSET key boy gzj animal cat food milk house tcyp"),"OK\r\n","RSET MORE",false);
-    Test(client,Proc_Protocol("RGET key girl"),"lyj\r\n","RGET",false);
-    Test(client,Proc_Protocol("RCOUNT key"),"5\r\n","RCOUNT",false);
-    Test(client,Proc_Protocol("REXIST key girl"),"EXIST\r\n","REXIST",false);
-    Test(client,Proc_Protocol("REXIST key sun"),"NOT EXIST\r\n","NOT REXIST",false);
-    Test(client,Proc_Protocol("RDELETE key animal"),"1\r\n","RDELETE ONE",false);
-    Test(client,Proc_Protocol("RCOUNT key"),"4\r\n","VERIFY LAST COMMAND",false);
-    Test(client,Proc_Protocol("RDELETE key house food"),"2\r\n","RDELETE MORE",false);
-    Test(client,Proc_Protocol("RCOUNT key"),"2\r\n","VERIFY LAST COMMAND",false);
-    Test(client,Proc_Protocol("RDELETE key"),"2\r\n","RDELETE ALL",false);
-    Test(client,Proc_Protocol("RCOUNT key"),"NO KEY\r\n","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("RSET key girl lyj"),"OK","RSET ONE",false);
+    Test(client,Proc_Protocol("RSET key boy gzj animal cat food milk house tcyp"),"OK","RSET MORE",false);
+    Test(client,Proc_Protocol("RGET key girl"),"lyj","RGET",false);
+    Test(client,Proc_Protocol("RCOUNT key"),"5","RCOUNT",false);
+    Test(client,Proc_Protocol("REXIST key girl"),"EXIST","REXIST",false);
+    Test(client,Proc_Protocol("REXIST key sun"),"NOT EXIST","NOT REXIST",false);
+    Test(client,Proc_Protocol("RDELETE key animal"),"1","RDELETE ONE",false);
+    Test(client,Proc_Protocol("RCOUNT key"),"4","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("RDELETE key house food"),"2","RDELETE MORE",false);
+    Test(client,Proc_Protocol("RCOUNT key"),"2","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("RDELETE key"),"2","RDELETE ALL",false);
+    Test(client,Proc_Protocol("RCOUNT key"),"NO KEY","VERIFY LAST COMMAND",false);
     
-    Test(client,Proc_Protocol("SSET name king"),"OK\r\n","SSET ONE",false);
-    Test(client,Proc_Protocol("SSET name Darren gzj lyj gzb"),"OK\r\n","SSET More",false);
-    Test(client,Proc_Protocol("SGET name"),"king\r\nDarren\r\ngzj\r\nlyj\r\ngzb\r\n","SGET",false);
-    Test(client,Proc_Protocol("SCOUNT name"),"5\r\n","SCOUNT",false);
-    Test(client,Proc_Protocol("SEXIST name king"),"EXIST\r\n","SEXIST",false);
-    Test(client,Proc_Protocol("SEXIST name GGBond"),"NOT EXIST\r\n","NOT SEXIST",false);
-    Test(client,Proc_Protocol("SDELETE name gzb"),"1\r\n","SDELETE ONE",false);
-    Test(client,Proc_Protocol("SCOUNT name"),"4\r\n","VERIFY LAST COMMAND",false);
-    Test(client,Proc_Protocol("SDELETE name gzj lyj"),"2\r\n","SDELETE MORE",false);
-    Test(client,Proc_Protocol("SCOUNT name"),"2\r\n","VERIFY LAST COMMAND",false);
-    Test(client,Proc_Protocol("SDELETE name"),"2\r\n","SDELETE ALL",false);
-    Test(client,Proc_Protocol("SCOUNT name"),"NO KEY\r\n","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("SSET name king"),"OK","SSET ONE",false);
+    Test(client,Proc_Protocol("SSET name Darren gzj lyj gzb"),"OK","SSET More",false);
+    Test(client,Proc_Protocol("SGET name"),"king\nDarren\ngzj\nlyj\ngzb","SGET",false);
+    Test(client,Proc_Protocol("SCOUNT name"),"5","SCOUNT",false);
+    Test(client,Proc_Protocol("SEXIST name king"),"EXIST","SEXIST",false);
+    Test(client,Proc_Protocol("SEXIST name GGBond"),"NOT EXIST","NOT SEXIST",false);
+    Test(client,Proc_Protocol("SDELETE name gzb"),"1","SDELETE ONE",false);
+    Test(client,Proc_Protocol("SCOUNT name"),"4","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("SDELETE name gzj lyj"),"2","SDELETE MORE",false);
+    Test(client,Proc_Protocol("SCOUNT name"),"2","VERIFY LAST COMMAND",false);
+    Test(client,Proc_Protocol("SDELETE name"),"2","SDELETE ALL",false);
+    Test(client,Proc_Protocol("SCOUNT name"),"NO KEY","VERIFY LAST COMMAND",false);
 
 
 
-    Test(client,Proc_Protocol("SET name lu"),"OK\r\n","Before affairs",false);
+    Test(client,Proc_Protocol("SET name lu"),"OK","Before affairs",false);
     Test(client,Proc_Protocol("BEG"),"","BEG AFFAIRS",true);
     Test(client,Proc_Protocol("APPAND name ' yv jia'"),"","ADDING",true);
     Test(client,Proc_Protocol("SET teacher king"),"","ADDING",true);
-    Test(client,Proc_Protocol("END"),"OK\r\n","END AFFAIRS",false);
-    Test(client,Proc_Protocol("GET name"),"lu yv jia\r\n","IDENTIFY",false);
-    Test(client,Proc_Protocol("GET teacher"),"king\r\n","IDENTIFY",false);
-    Test(client,Proc_Protocol("ROLLBACK"),"OK\r\n","ROLLBACK",false);
-    Test(client,Proc_Protocol("GET name"),"lu\r\n","IDENTIFY",false);
-    Test(client,Proc_Protocol("GET teacher"),"NO KEY\r\n","IDENTIFY",false);
-    Test(client,Proc_Protocol("CLEAN_CACHE"),"OK\r\n","CLEAN",false);
-    Test(client,Proc_Protocol("ROLLBACK"),"OK\r\n","IDENTIFY",false);
-    Test(client,Proc_Protocol("GET name"),"NO KEY\r\n","IDENTIFY",false);
+    Test(client,Proc_Protocol("END"),"OK","END AFFAIRS",false);
+    Test(client,Proc_Protocol("GET name"),"lu yv jia","IDENTIFY",false);
+    Test(client,Proc_Protocol("GET teacher"),"king","IDENTIFY",false);
+    Test(client,Proc_Protocol("ROLLBACK"),"OK","ROLLBACK",false);
+    Test(client,Proc_Protocol("GET name"),"lu","IDENTIFY",false);
+    Test(client,Proc_Protocol("GET teacher"),"NO KEY","IDENTIFY",false);
+    Test(client,Proc_Protocol("CLEAN_CACHE"),"OK","CLEAN",false);
+    Test(client,Proc_Protocol("ROLLBACK"),"OK","IDENTIFY",false);
+    Test(client,Proc_Protocol("GET name"),"NO KEY","IDENTIFY",false);
     client.Close();
     return 0;
 }

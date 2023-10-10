@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-10-05 07:59:08
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-07 11:17:07
+ * @LastEditTime: 2023-10-09 04:35:24
  */
 #pragma once
 #include <iostream>
@@ -25,6 +25,10 @@ public:
 class Msg
 {
 public:
+    Msg(){
+        Event_Start = std::make_shared<std::atomic_bool>(false);
+    }
+
     Msg(int fd , std::string buffer, std::shared_ptr<std::atomic_bool> status)
     {
         this->fd = fd;

@@ -25,6 +25,7 @@ int APP::Init_cb(std::function<void()> &accept_cb, std::function<void()> &read_c
  */
 string APP::Decode(Msg& msg)
 {
+    //std::cout<<msg.buffer<<std::endl;
     Split split(msg.buffer);
     if(!split.Spilt_With_Char_Connect_With_Quote(' ')){
         return ret_msg[RET_STR_ERROR];
@@ -52,6 +53,8 @@ string APP::Decode(Msg& msg)
                     ret_info = Exec_Cmd_RollBack(msg);
                 else if(i == CMD_CLEAN_CACHE)
                     ret_info = Exec_Cmd_Clean_Cache(msg);
+                else if(i == CMD_CLEAN_AOF)
+                    ret_info = Exec_Cmd_Clean_AOF(msg);
             }else{
                 if(i == CMD_EVENTEND)
                     ret_info = Exec_Cmd_End(msg);
@@ -68,6 +71,48 @@ string APP::Decode(Msg& msg)
     return ret_info;
 }
 
+int APP::Read_AOF_And_Init()
+{
+    if(!file_io->exist(file_io->get_filename()))
+    {
+        spdlog::error("%s\n",strerror(errno));
+        return -1;
+    }
+    std::string buffer ="";
+    uintmax_t size = file_io->size(file_io->get_filename());
+    file_io->Is_Loading = true;
+    if(size < LIMIT_STREAM_SIZE)
+    {
+        if(file_io->open(File_IO::STREAM,file_io->get_filename()) != 0){
+            spdlog::error("%s\n",strerror(errno));
+            return -1;
+        }
+        buffer.assign(file_io->read(File_IO::STREAM,size),size);
+    }else{
+        if(file_io->open(File_IO::MMAP,file_io->get_filename()) != 0){
+            spdlog::error("%s\n",strerror(errno));
+            return -1;
+        }
+        buffer.assign(file_io->read(File_IO::MMAP,size),size);
+    }
+    //std::cout<<buffer<<std::endl;
+    Split spilt(buffer);
+    spilt.Spilt_With_Char('\n');
+    std::vector<std::string_view> res = spilt.Get_Result();
+    for(int i=0;i<res.size();i++)
+    {
+        Msg msg;
+        msg.buffer = std::string(res[i]);
+        // std::cout<<msg.buffer<<std::endl;
+        Decode(msg);
+    
+    }
+    file_io->Is_Loading = false;
+
+    //不需要删除
+    //std::remove(file_io->Get_File_Name().c_str());
+    return 0;
+}
 
 void APP::Deal_Closed_Conn(Tcp_Conn_Ptr &conn_ptr,uint32_t event)
 {
@@ -112,7 +157,7 @@ string APP::Decode_String(Msg& msg,int cmd_type, vector<string_view> &res)
         case CMD_APPAND:
         {
             if(res.size()!=3)   return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_Appand(string(res[1]),string(res[2]));
+            ret_info = Exec_Cmd_Appand(msg,string(res[1]),string(res[2]));
             return ret_info;
         }
         case CMD_LEN:
@@ -147,7 +192,7 @@ string APP::Decode_Array(Msg& msg,int cmd_type, vector<string_view> &res)
         case CMD_ASET:
         {
             if(res.size()<3)   return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_ASet(string(res[1]),res);
+            ret_info = Exec_Cmd_ASet(msg,string(res[1]),res);
             return ret_info;
         }
         case CMD_AGET:
@@ -188,13 +233,13 @@ string APP::Decode_List(Msg& msg,int cmd_type, vector<string_view> &res)
         case CMD_LPUSH:
         {
             if(res.size()<3)   return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_LPUSH(string(res[1]),res);
+            ret_info = Exec_Cmd_LPUSH(msg,string(res[1]),res);
             return ret_info;
         }
         case CMD_RPUSH:
         {
             if(res.size()<3)   return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_RPUSH(string(res[1]),res);
+            ret_info = Exec_Cmd_RPUSH(msg,string(res[1]),res);
             return ret_info;
         }
         case CMD_LGET:
@@ -236,7 +281,7 @@ string APP::Decode_Rbtree(Msg& msg,int cmd_type, vector<string_view> &res)
         {
             if (res.size() < 4 || res.size() % 2 != 0)
             return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_RSet(string(res[1]), res);
+            ret_info = Exec_Cmd_RSet(msg,string(res[1]), res);
             return ret_info;
         }
         case CMD_RGET:
@@ -281,7 +326,7 @@ string APP::Decode_Set(Msg& msg,int cmd_type, vector<string_view> &res)
         case CMD_SSET:
         {
             if(res.size()<3)   return ret_msg[RET_ARG_ERROR];
-            ret_info = Exec_Cmd_SSet(string(res[1]),res);
+            ret_info = Exec_Cmd_SSet(msg,string(res[1]),res);
             return ret_info;
         }
         case CMD_SGET:
@@ -330,6 +375,9 @@ string APP::Exec_Cmd_Set(Msg& msg, string key, string value)
     if(it == string_store.store.end()){
         it = string_store.store.emplace(key,std::make_shared<Security_String>()).first;
     }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
+    }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
     while(!key_lock.try_lock()){
@@ -357,10 +405,10 @@ string APP::Exec_Cmd_Get(string key)
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    return it->second->security_string+"\r\n";;
+    return it->second->security_string;
 }
 
-string APP::Exec_Cmd_Appand(string key, string value)
+string APP::Exec_Cmd_Appand(Msg&msg ,string key, string value)
 {
     std::shared_lock lock(*string_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
@@ -375,6 +423,9 @@ string APP::Exec_Cmd_Appand(string key, string value)
     while(!key_lock.try_lock()){
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     it->second->security_string.append(value);
     return ret_msg[RET_OK];
@@ -396,7 +447,7 @@ string APP::Exec_Cmd_Len(string key)
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    return std::to_string(it->second->security_string.length())+"\r\n";
+    return std::to_string(it->second->security_string.length());
 }
 
 string APP::Exec_Cmd_Delete(Msg& msg,string key)
@@ -406,6 +457,9 @@ string APP::Exec_Cmd_Delete(Msg& msg,string key)
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     std::map<std::string,std::shared_ptr<Security_String>>::iterator it=string_store.store.find(key);
     if(it==string_store.store.end()){
@@ -429,7 +483,7 @@ string APP::Exec_Cmd_Exist(string key)
     return ret_msg[RET_EXIST];
 }
 
-string APP::Exec_Cmd_ASet(string key,vector<string_view> &res)
+string APP::Exec_Cmd_ASet(Msg& msg,string key,vector<string_view> &res)
 {
     std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*array_store.mtx,std::defer_lock);
@@ -440,6 +494,9 @@ string APP::Exec_Cmd_ASet(string key,vector<string_view> &res)
     std::map<std::string,std::shared_ptr<Security_Array>>::iterator it = array_store.store.find(key);
     if(it == array_store.store.end()){
         it = array_store.store.emplace(key,std::make_shared<Security_Array>()).first;
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
@@ -477,7 +534,8 @@ string APP::Exec_Cmd_AGet(string key)
     span<string> res((*it).second->security_array);
     string ret_value;
     for(int i=0;i<res.size();i++){
-        ret_value = ret_value + res[i] + "\r\n";
+        ret_value = ret_value + res[i];
+        if(i != res.size()-1) ret_value += "\n";
     }
     return ret_value;
 }
@@ -499,7 +557,7 @@ string APP::Exec_Cmd_ACount(string key)
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    return std::to_string((*it).second->security_array.size())+"\r\n";
+    return std::to_string((*it).second->security_array.size());
 }
 
 string APP::Exec_Cmd_ADelete(Msg& msg,string key,vector<string_view> &res)
@@ -509,6 +567,9 @@ string APP::Exec_Cmd_ADelete(Msg& msg,string key,vector<string_view> &res)
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     string ret_value;
     std::map<std::string,std::shared_ptr<Security_Array>>::iterator it = array_store.store.find(key);
@@ -546,7 +607,7 @@ string APP::Exec_Cmd_ADelete(Msg& msg,string key,vector<string_view> &res)
         lock.unlock();
     }
     }
-    return std::to_string(count)+"\r\n";
+    return std::to_string(count);
 }
 
 string APP::Exec_Cmd_AExist(string key, string value)
@@ -575,7 +636,7 @@ string APP::Exec_Cmd_AExist(string key, string value)
     return ret_msg[RET_NOT_EXIST];
 }
 
-string APP::Exec_Cmd_LPUSH(string key, vector<string_view> &res)
+string APP::Exec_Cmd_LPUSH(Msg& msg,string key, vector<string_view> &res)
 {
     std::unique_lock lock(*list_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
@@ -586,6 +647,9 @@ string APP::Exec_Cmd_LPUSH(string key, vector<string_view> &res)
     std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
     if( it == list_store.store.end()){
         it = list_store.store.emplace(key,std::make_shared<Security_List>()).first;
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     lock.unlock();
 
@@ -602,7 +666,7 @@ string APP::Exec_Cmd_LPUSH(string key, vector<string_view> &res)
     return ret_msg[RET_OK];
 }
 
-string APP::Exec_Cmd_RPUSH(string key, vector<string_view> &res)
+string APP::Exec_Cmd_RPUSH(Msg& msg,string key, vector<string_view> &res)
 {
     std::unique_lock lock(*list_store.mtx,std::defer_lock);
     while(!lock.try_lock()){
@@ -613,6 +677,9 @@ string APP::Exec_Cmd_RPUSH(string key, vector<string_view> &res)
     std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
     if( it == list_store.store.end()){
         it = list_store.store.emplace(key,std::make_shared<Security_List>()).first;
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
@@ -646,9 +713,12 @@ string APP::Exec_Cmd_LGet(string key)
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     string ret_value;
+    int i=0;
     for(list<string>::iterator list_it=(*it).second->security_list.begin();list_it!=(*it).second->security_list.end();list_it++)
     {
-        ret_value=ret_value+(*list_it)+"\r\n";
+        ret_value=ret_value+(*list_it);
+        if( i < (*it).second->security_list.size()-1) ret_value+="\n";
+        i++;
     }
     return ret_value;
 }
@@ -670,7 +740,7 @@ string APP::Exec_Cmd_LCount(string key)
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    return std::to_string((*it).second->security_list.size())+"\r\n";
+    return std::to_string((*it).second->security_list.size());
 }
 
 string APP::Exec_Cmd_LDelete(Msg& msg,string key, vector<string_view> &res)
@@ -680,6 +750,9 @@ string APP::Exec_Cmd_LDelete(Msg& msg,string key, vector<string_view> &res)
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
     //未找到key
@@ -692,7 +765,7 @@ string APP::Exec_Cmd_LDelete(Msg& msg,string key, vector<string_view> &res)
         list_store.store.erase(it);
     }else{
         lock.unlock();
-        std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
+        std::unique_lock key_lock(*it->second->mtx, std::defer_lock);
         while (!key_lock.try_lock())
         {
             spdlog::debug("lock failed\n");
@@ -710,13 +783,14 @@ string APP::Exec_Cmd_LDelete(Msg& msg,string key, vector<string_view> &res)
                 }
             }
         }
-        if(it->second->security_list.empty()){
-        lock.lock();
-        it = list_store.store.erase(it);
-        lock.unlock();
+        if (it->second->security_list.empty())
+        {
+            lock.lock();
+            it = list_store.store.erase(it);
+            lock.unlock();
+        }
     }
-    }
-    return std::to_string(count)+"\r\n";
+    return std::to_string(count);
 }
 
 string APP::Exec_Cmd_LExist(string key, string value)
@@ -745,7 +819,7 @@ string APP::Exec_Cmd_LExist(string key, string value)
     return ret_msg[RET_NOT_EXIST];
 }
 
-string APP::Exec_Cmd_RSet(string key,vector<string_view> &res)
+string APP::Exec_Cmd_RSet(Msg& msg,string key,vector<string_view> &res)
 {
     std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*rbtree_store.mtx,std::defer_lock);
@@ -757,6 +831,9 @@ string APP::Exec_Cmd_RSet(string key,vector<string_view> &res)
     std::map<std::string,std::shared_ptr<Security_RBtree>>::iterator it = rbtree_store.store.find(key);
     if( it == rbtree_store.store.end()){
         it = rbtree_store.store.emplace(key,std::make_shared<Security_RBtree>()).first;
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
@@ -790,7 +867,7 @@ string APP::Exec_Cmd_RGet(string key,string field)
     if(rb_it == (*it).second->security_rbtree.end()){
         return ret_msg[RET_NO_FIELD];
     }
-    return (*rb_it).second + "\r\n";
+    return (*rb_it).second;
 }
 
 string APP::Exec_Cmd_RCount(string key)
@@ -809,7 +886,7 @@ string APP::Exec_Cmd_RCount(string key)
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    return std::to_string((*it).second->security_rbtree.size())+"\r\n";
+    return std::to_string((*it).second->security_rbtree.size());
 }
 
 string APP::Exec_Cmd_RDelete(Msg& msg,string key,vector<string_view> &res)
@@ -819,6 +896,9 @@ string APP::Exec_Cmd_RDelete(Msg& msg,string key,vector<string_view> &res)
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     std::map<std::string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.store.find(key);
     if(it == rbtree_store.store.end()){
@@ -850,7 +930,7 @@ string APP::Exec_Cmd_RDelete(Msg& msg,string key,vector<string_view> &res)
             lock.unlock();
         }
     }
-    return std::to_string(count)+"\r\n";
+    return std::to_string(count);
 }
 
 string APP::Exec_Cmd_RExist(string key, string field)
@@ -875,7 +955,7 @@ string APP::Exec_Cmd_RExist(string key, string field)
     return ret_msg[RET_EXIST];
 }
 
-string APP::Exec_Cmd_SSet(string key, vector<string_view> &res)
+string APP::Exec_Cmd_SSet(Msg& msg,string key, vector<string_view> &res)
 {
     std::shared_lock all_lock(*back_store.mtx);
     std::unique_lock lock(*set_store.mtx,std::defer_lock);
@@ -886,6 +966,9 @@ string APP::Exec_Cmd_SSet(string key, vector<string_view> &res)
     std::map<std::string,std::shared_ptr<Security_Set>>::iterator it = set_store.store.find(key);
     if( it == set_store.store.end()){
         it = set_store.store.emplace(key,std::make_shared<Security_Set>()).first;
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
@@ -918,8 +1001,11 @@ string APP::Exec_Cmd_SGet(string key)
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
     string ret_value;
+    int i=0;
     for(unordered_set<string>::iterator set_it = (*it).second->security_set.begin();set_it!=(*it).second->security_set.end();set_it++){
-        ret_value=ret_value+(*set_it)+"\r\n";
+        ret_value=ret_value+(*set_it);
+        if(i < (*it).second->security_set.size()-1) ret_value+="\n";
+        i++;
     }
     return ret_value;
 }
@@ -941,7 +1027,7 @@ string APP::Exec_Cmd_SCount(string key)
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
     }
-    return std::to_string((*it).second->security_set.size())+"\r\n";
+    return std::to_string((*it).second->security_set.size());
 }
 
 string APP::Exec_Cmd_SDelete(Msg& msg,string key, vector<string_view> &res)
@@ -951,6 +1037,9 @@ string APP::Exec_Cmd_SDelete(Msg& msg,string key, vector<string_view> &res)
     while(!lock.try_lock()){
         spdlog::debug("lock failed\n");
         std::this_thread::sleep_for(std::chrono::milliseconds(this->wait_lock_millisec));
+    }
+    if(!file_io->Is_Loading){
+        file_io->write(std::move(msg.buffer+"\n"));
     }
     string ret_value;
     std::map<std::string,std::shared_ptr<Security_Set>>::iterator it = set_store.store.find(key);
@@ -986,7 +1075,7 @@ string APP::Exec_Cmd_SDelete(Msg& msg,string key, vector<string_view> &res)
             lock.unlock();
         }
     }
-    return std::to_string(count)+"\r\n";
+    return std::to_string(count);
 }
 
 string APP::Exec_Cmd_SExist(string key, string value)
@@ -1140,5 +1229,14 @@ string APP::Exec_Cmd_Clean_Cache(Msg& msg)
     back_store.rbtree_store.clear();
     back_store.set_store.clear();
     back_store.string_store.clear();
+    return ret_msg[RET_OK];
+}
+
+string APP::Exec_Cmd_Clean_AOF(Msg& msg)
+{
+    if(std::filesystem::exists(file_io->back_filename)){
+        std::filesystem::remove(file_io->back_filename);
+    }
+    std::filesystem::rename(file_io->get_filename(),file_io->back_filename);
     return ret_msg[RET_OK];
 }

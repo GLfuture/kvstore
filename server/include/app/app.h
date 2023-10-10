@@ -2,11 +2,12 @@
 #include <cstdint>
 #ifndef APP_H
 #define APP_H 
-#include "../network/netlib.h"
-#include "../thread_pool/ThreadPool.hpp"
-#include "../split/split.hpp"
-#include "../protocol/protocol.hpp"
-#include "../security/security.h"
+#include "network/netlib.h"
+#include "thread_pool/ThreadPool.hpp"
+#include "split/split.hpp"
+#include "protocol/protocol.hpp"
+#include "security/security.h"
+#include "fileio/fileio.h"
 #include "spdlog/spdlog.h"
 #include <queue>
 #include <unordered_set>
@@ -19,6 +20,7 @@ using std::unordered_set;
 using std::list;
 #define THREAD_NUM 8
 
+#define LIMIT_STREAM_SIZE 10*1024*1024
 //后期可将一部分string优化为string_view，减少拷贝
 typedef enum CMD{
     CMD_BEG = 0,
@@ -53,6 +55,7 @@ typedef enum CMD{
     CMD_EVENTEND,
     CMD_ROLLBACK,
     CMD_CLEAN_CACHE,
+    CMD_CLEAN_AOF,
     CMD_END,
 } CMD;
 
@@ -88,6 +91,7 @@ static const char *cmds[CMD_END]={
     "END",
     "ROLLBACK",
     "CLEAN_CACHE",
+    "CLEAN_AOF",
 };
 
 typedef enum RETCODE
@@ -108,16 +112,16 @@ typedef enum RETCODE
 
 static const char *ret_msg[RET_END]=
 {
-    "OK\r\n",
-    "EXIST\r\n",
-    "NOT EXIST\r\n",
-    "NO KEY\r\n",
-    "NO FIELD\r\n",
+    "OK",
+    "EXIST",
+    "NOT EXIST",
+    "NO KEY",
+    "NO FIELD",
     "",
-    "ERROR_STR\r\n",
-    "ERROR_ARG\r\n",
-    "ERROR_CMD\r\n",
-    "ERROR_ROLLBACK_FILED\r\n"
+    "ERROR_STR",
+    "ERROR_ARG",
+    "ERROR_CMD",
+    "ERROR_ROLLBACK_FILED"
 };
 
 #endif
@@ -129,8 +133,24 @@ public:
     using Tcp_Conn_Ptr = std::shared_ptr<Tcp_Conn>;
     using Affair_Ptr = std::shared_ptr<Affairs>;
 
-    APP(uint32_t event_num,uint16_t port, uint16_t backlog, uint8_t thread_num,uint64_t wait_for_lock_millisec)
+    using File_IO_Ptr = std::shared_ptr<File_IO>;
+
+    /**
+     * @description: 
+     * @param {uint32_t} event_num              //同时处理的事务的最大数量
+     * @param {uint16_t} port                   //监听端口
+     * @param {uint16_t} backlog                //半连接队列长度
+     * @param {uint8_t} thread_num              //线程数
+     * @param {uint64_t} wait_for_lock_millisec //等待锁时的休眠时间
+     * @param {string} file_path                //aof文件保存路径
+     * @param {string} bk_file_path             //上一次aof的备份
+     * @return {*}
+     * @author: Gong
+     */
+    APP(uint32_t event_num,uint16_t port, uint16_t backlog, uint8_t thread_num,uint64_t wait_for_lock_millisec
+        ,std::string file_path,std::string bk_file_path)
     {
+        file_io = std::make_shared<File_IO>(file_path,bk_file_path);
         wait_lock_millisec = wait_for_lock_millisec;
         R = new Reactor(event_num);
         th_pool.Create(thread_num);
@@ -141,6 +161,8 @@ public:
         R->Set_No_Block(server->Get_Sock());
         R->Add_Reactor(server->Get_Sock(), EPOLLIN);
     }
+
+    int Read_AOF_And_Init();
 
     int Init_cb(std::function<void()>&accept_cb,std::function<void()>&read_cb
         ,std::function<void()>&write_cb,std::function<void()>&exit_cb);
@@ -179,21 +201,21 @@ private:
     //--------------------- 字符串 -------------------------
     string Exec_Cmd_Set(Msg& msg, string key,string value);
     string Exec_Cmd_Get(string key);
-    string Exec_Cmd_Appand(string key,string value);
+    string Exec_Cmd_Appand(Msg& msg , string key,string value);
     string Exec_Cmd_Len(string key);
     string Exec_Cmd_Delete(Msg& msg, string key);
     string Exec_Cmd_Exist(string key);
 
     //--------------------- 数组 -------------------------
-    string Exec_Cmd_ASet(string key,vector<string_view> &res);
+    string Exec_Cmd_ASet(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_AGet(string key);
     string Exec_Cmd_ACount(string key);
     string Exec_Cmd_ADelete(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_AExist(string key,string value);
 
     //--------------------- 链表 -------------------------
-    string Exec_Cmd_LPUSH(string key,vector<string_view> &res);
-    string Exec_Cmd_RPUSH(string key,vector<string_view> &res);
+    string Exec_Cmd_LPUSH(Msg& msg,string key,vector<string_view> &res);
+    string Exec_Cmd_RPUSH(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_LGet(string key);
     string Exec_Cmd_LCount(string key);
     string Exec_Cmd_LDelete(Msg& msg,string key,vector<string_view> &res);
@@ -201,14 +223,14 @@ private:
 
 
     //--------------------- 红黑树 -------------------------
-    string Exec_Cmd_RSet(string key,vector<string_view> &res);
+    string Exec_Cmd_RSet(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_RGet(string key,string field);
     string Exec_Cmd_RCount(string key);
     string Exec_Cmd_RDelete(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_RExist(string key,string field);
     
     //--------------------- 集合 -------------------------
-    string Exec_Cmd_SSet(string key,vector<string_view> &res);
+    string Exec_Cmd_SSet(Msg& msg,string key,vector<string_view> &res);
     string Exec_Cmd_SGet(string key);
     string Exec_Cmd_SCount(string key);
     string Exec_Cmd_SDelete(Msg& msg,string key,vector<string_view> &res);
@@ -219,7 +241,7 @@ private:
     string Exec_Cmd_End(Msg& msg);
     string Exec_Cmd_RollBack(Msg& msg);
     string Exec_Cmd_Clean_Cache(Msg& msg);
-
+    string Exec_Cmd_Clean_AOF(Msg& msg);
 
     void BackUp();
 
@@ -227,6 +249,9 @@ private:
 
     ThreadPool th_pool; // 线程池
     Reactor *R;
+
+    File_IO_Ptr file_io;
+
 
     uint64_t cmd_save_millisec;//定时保存命令到磁盘以防宕机或连接断开
 
