@@ -4,20 +4,36 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-10 08:41:03
+ * @LastEditTime: 2023-10-11 08:34:02
  */
 
-#include"app/app.h"
+#include "app/app.h"
 #include "config/config.h"
 #include <cerrno>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/rotating_file_sink.h"
+
+
 #define THREAD_NUM 8
 #define MAX_CONN_NUM 10
 #define PRORO_VERION "1.0"
 #define VERION_LENGTH 4
+#define LOGGER_NAME "logger"
+#define MAX_LOG_SIZE 10*1024*1024
+#define MAX_LOG_FILE_NUM 5
+#define LOG_LEVEL spdlog::level::debug
+
 using namespace Config_NSP;
 
 static bool Is_Exist = false;
-
+static int port = 8080;
+static int backlog = 10;
+static int event_num = 2048;
+static int thread_num = 4;
+static int lock_wait_millisecond = 100;
+static std::string aof_path = "./kvstore.aof";
+static std::string aof_back_path = "./aof.bk";
+static std::string log_path = "../logs/kv.log";
 
 /**
  * @description: 接收连接触发回调
@@ -123,11 +139,9 @@ int main(int argc,char*argv[])
     }else{
         printf("arg error!\n");
     }
-    int port = 8080;
-    int backlog = 10;
-    int event_num = 2048;
-    int thread_num = 4;
-    int per_max_buffer_size = 1024;
+    auto m_logger = spdlog::rotating_logger_mt(LOGGER_NAME, log_path, MAX_LOG_SIZE, MAX_LOG_FILE_NUM);
+    m_logger->set_level(LOG_LEVEL);
+    spdlog::set_default_logger(m_logger);
     if(Is_Exist){
         Config_Json json;
         json.Load_Conf(path);
@@ -143,12 +157,20 @@ int main(int argc,char*argv[])
         ret = json.Get_Value<int>(json.Get_Root_Value(), "thread_num", thread_num);
         if (ret == -1)
             exit(-1);
-        ret = json.Get_Value<int>(json.Get_Root_Value(), "per_max_buffer_size", per_max_buffer_size);
-        if (ret == -1)
+        ret = json.Get_Value<int>(json.Get_Root_Value(),"lock_wait_millisecond",lock_wait_millisecond);
+        if(ret == -1)
+            exit(-1);
+        ret = json.Get_Value<std::string>(json.Get_Root_Value(),"aof_path",aof_path);
+        if(ret == -1)
+            exit(-1);
+        ret = json.Get_Value<std::string>(json.Get_Root_Value(),"aof_back_path",aof_back_path);
+        if(ret == -1)
+            exit(-1);
+        ret = json.Get_Value<std::string>(json.Get_Root_Value(),"log_path",log_path);
+        if(ret == -1)
             exit(-1);
     }
-    
-    APP app(event_num,port,backlog,thread_num,100,"test.txt","aof.bk");
+    APP app(event_num,port,backlog,thread_num,lock_wait_millisecond,aof_path,aof_back_path);
     int ret = app.Read_AOF_And_Init();
     if(ret != 0) 
     {

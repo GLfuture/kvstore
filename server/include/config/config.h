@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <vector>
 #include <spdlog/spdlog.h>
+
 namespace Config_NSP {
     class Config_Base
     {

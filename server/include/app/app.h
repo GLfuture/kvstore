@@ -20,6 +20,7 @@ using std::unordered_set;
 using std::list;
 #define THREAD_NUM 8
 
+
 #define LIMIT_STREAM_SIZE 10*1024*1024
 //后期可将一部分string优化为string_view，减少拷贝
 typedef enum CMD{
@@ -134,7 +135,6 @@ public:
     using Affair_Ptr = std::shared_ptr<Affairs>;
 
     using File_IO_Ptr = std::shared_ptr<File_IO>;
-
     /**
      * @description: 
      * @param {uint32_t} event_num              //同时处理的事务的最大数量
@@ -148,9 +148,9 @@ public:
      * @author: Gong
      */
     APP(uint32_t event_num,uint16_t port, uint16_t backlog, uint8_t thread_num,uint64_t wait_for_lock_millisec
-        ,std::string file_path,std::string bk_file_path)
+        ,std::string aof_file_path,std::string aof_bk_file_path)
     {
-        file_io = std::make_shared<File_IO>(file_path,bk_file_path);
+        file_io = std::make_shared<File_IO>(aof_file_path,aof_bk_file_path);
         wait_lock_millisec = wait_for_lock_millisec;
         R = new Reactor(event_num);
         th_pool.Create(thread_num);
@@ -238,7 +238,7 @@ private:
 
     //---------------------event---------------------
     string Exec_Cmd_Eevent_Beg(Msg& msg);
-    string Exec_Cmd_End(Msg& msg);
+    string Exec_Cmd_Event_End(Msg& msg);
     string Exec_Cmd_RollBack(Msg& msg);
     string Exec_Cmd_Clean_Cache(Msg& msg);
     string Exec_Cmd_Clean_AOF(Msg& msg);
@@ -268,6 +268,7 @@ private:
     Map_Security_Set_Store set_store;//set存储
 
     Security_Back_Store back_store;//存储DELETE key的信息
+    Security_Recorder cmd_recorder;
 
     std::map<uint32_t,Affair_Ptr> affairs;//存储各个连接对应的事务,每个连接同时只能执行一个事务
 };

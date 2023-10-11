@@ -1,3 +1,0 @@
-SET name gong
-DELETE name
-SET name 'lu yvjia'

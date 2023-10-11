@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-10 13:37:54
+ * @LastEditTime: 2023-10-11 09:10:39
 -->
 <<<<<<< HEAD
 # kvstore
@@ -93,6 +93,7 @@ quit //退出客户端
 
 6.BackUp浅拷贝问题
 
+7.Rollback也需要记录到aof文件，同时需要在每次beg之前back.store的内容记录到文件中
 ========
 ### 后续优化
 可以将解析命令放在客户端处理完毕由协议带给服务器，减少数据库压力

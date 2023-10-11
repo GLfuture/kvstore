@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-10 13:52:59
+ * @LastEditTime: 2023-10-11 03:44:18
  */
 
 #include "network/netlib.hpp"
@@ -19,16 +19,23 @@
 static auto logger = spdlog::basic_logger_mt("logger","logs/info.log");
 static std::string remote_addr = "127.0.0.1";
 static int remote_port = 9999;
+static bool Affair_Is_Starting = false;
 
 enum COMMAND{
     COMMAND_BEG = 0,
     COMMAND_QUIT = COMMAND_BEG,
+    COMMAND_EVENT_BEG,
+    COMMAND_EVENT_END,
     COMMAND_END,
 };
 
 const char*command[]={
-    "quit"
+    "QUIT",
+    "BEG",
+    "END"
 };
+
+
 
 void Send_Msg(Client_Sock& client , const std::string& cmd)
 {
@@ -106,9 +113,11 @@ int main(int argc,char* argv[])
             if(cmd[i] == ' ') break;
             cmd[i] = std::toupper(cmd[i]);
         }
-        if(cmd.compare("QUIT") == 0) break;
+        if(cmd.compare(command[COMMAND_QUIT]) == 0) break;
+        if(cmd.compare(command[COMMAND_EVENT_BEG]) == 0) Affair_Is_Starting = true;
+        if(cmd.compare(command[COMMAND_EVENT_END]) == 0) Affair_Is_Starting = false;
         Send_Msg(client,cmd);
-        std::cout<<Recv_Msg(client)<<std::endl;
+        if(!Affair_Is_Starting) std::cout<<Recv_Msg(client)<<std::endl;
 
     }
     client.Close();

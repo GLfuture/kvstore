@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-10-09 11:32:31
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-10 09:03:43
+ * @LastEditTime: 2023-10-11 13:47:38
  */
 #include "fileio/fileio.h"
 
@@ -27,12 +27,14 @@ int File_IO::open(FILE_IO_FORM form, const std::string&& filename)
     if(form == STREAM){
         stream->open(filename,std::fstream::in | std::fstream::out | std::fstream::app);
         if(stream->fail()){
+            std::cout<<"stream open failed\n"<<std::endl;
             return errno;
         }
     }else if(form == MMAP)
     {
         fd = ::open(filename.c_str(),O_RDWR | O_CREAT);
         if( fd == -1){
+            std::cout<<"mmap open failed\n"<<std::endl;
             return fd;
         }
         offset = 0;
@@ -98,4 +100,58 @@ void File_IO::reset(FILE_IO_FORM form)
     {
         offset = 0;
     }
+}
+
+void File_IO::erase_from_end(int line_size)
+{
+    int fileDescriptor = ::open(filename.c_str(), O_RDWR);
+    if (fileDescriptor == -1) {
+        spdlog::error("erase_from_size:open failed\n");
+        return;
+    }
+
+    // 获取文件大小
+    struct stat fileInfo;
+    if (fstat(fileDescriptor, &fileInfo) == -1) {
+        spdlog::error("erase_from_size: fstat failed\n");
+        ::close(fileDescriptor);
+        return;
+    }
+    off_t fileSize = fileInfo.st_size;
+
+    // 将文件映射到内存
+    char* fileData = static_cast<char*>(mmap(NULL, fileSize, PROT_READ | PROT_WRITE, MAP_SHARED, fileDescriptor, 0));
+    if (fileData == MAP_FAILED) {
+        spdlog::error("erase_from_size: mmap failed\n");
+        ::close(fileDescriptor);
+        return;
+    }
+
+    int newFileSize = 0;
+    // 从文件末尾开始删除指定行数
+    int linesToDelete = -1;
+    for (off_t i = fileSize - 1; i >= 0; --i) {
+        if (fileData[i] == '\n') {
+            ++linesToDelete;
+            if (linesToDelete == line_size) {
+                // 删除到达指定行数
+                memset(&fileData[i + 1], 0, fileSize - i - 1);
+                newFileSize = i + 1;
+                break;
+            }
+        }
+    }
+
+    if (munmap(fileData, fileSize) == -1) {
+       spdlog::error("erase_from_size: munmap failed\n");
+    }
+
+    if (ftruncate(fileDescriptor, newFileSize) == -1) {
+        std::cerr << "文件截断失败。" << std::endl;
+        ::close(fileDescriptor);
+        return;
+    }
+    // 关闭文件
+    ::close(fileDescriptor);
+
 }

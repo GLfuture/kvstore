@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-10-09 11:32:25
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-10 09:07:33
+ * @LastEditTime: 2023-10-11 13:15:10
  */
 #pragma once
 #include <iostream>
@@ -15,6 +15,8 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <filesystem>
+#include <sys/stat.h>
+#include <spdlog/spdlog.h>
 //加载过程不存在多线程，没必要使用原子变量
 //#include <atomic>
 
@@ -78,7 +80,7 @@ public:
     bool exist(const std::string& filename) override;
     uintmax_t size(const std::string& filename) override;
     void reset(FILE_IO_FORM form);
-    
+    void erase_from_end(int line_size);
 
     bool Is_Loading;
     std::string back_filename;

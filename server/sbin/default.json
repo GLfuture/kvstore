@@ -3,5 +3,8 @@
     "backlog":10,
     "event_num":1024,
     "thread_num":4,
-    "per_max_buffer_size": 2048
+    "lock_wait_millisecond":100,
+    "aof_path":"./kvstore.aof",
+    "aof_back_path":"./aof.bk",
+    "log_path":"../logs/kv.log"
 }

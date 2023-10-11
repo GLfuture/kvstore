@@ -35,6 +35,15 @@ string APP::Decode(Msg& msg)
     int i;
     for(i = CMD_BEG ; i < CMD_END ; i++)
     {
+        if(res[0].compare(cmds[CMD_EVENTEND]) == 0)
+        {
+            ret_info = Exec_Cmd_Event_End(msg);
+            break;
+        }
+        if(msg.Event_Start->load()){
+            affairs[msg.fd]->Ready_Add_Cmd(msg.buffer);
+            break;
+        }
         if(res[0].compare(cmds[i]) == 0){
             if(!msg.Event_Start->load()){
                 if (i <= CMD_EXIST)
@@ -55,13 +64,6 @@ string APP::Decode(Msg& msg)
                     ret_info = Exec_Cmd_Clean_Cache(msg);
                 else if(i == CMD_CLEAN_AOF)
                     ret_info = Exec_Cmd_Clean_AOF(msg);
-            }else{
-                if(i == CMD_EVENTEND)
-                    ret_info = Exec_Cmd_End(msg);
-                else if(i == CMD_ROLLBACK)
-                    ret_info = ret_msg[RET_CMD_ERROR];
-                else 
-                    affairs[msg.fd]->Ready_Add_Cmd(msg.buffer);
             }
             break;
         }
@@ -73,24 +75,25 @@ string APP::Decode(Msg& msg)
 
 int APP::Read_AOF_And_Init()
 {
-    if(!file_io->exist(file_io->get_filename()))
+    uintmax_t size = 0;
+    if(file_io->exist(file_io->get_filename()))
     {
-        spdlog::error("%s\n",strerror(errno));
-        return -1;
+        size = file_io->size(file_io->get_filename());
+    }else{
+        spdlog::info("{}\n",strerror(errno));
     }
     std::string buffer ="";
-    uintmax_t size = file_io->size(file_io->get_filename());
     file_io->Is_Loading = true;
     if(size < LIMIT_STREAM_SIZE)
     {
         if(file_io->open(File_IO::STREAM,file_io->get_filename()) != 0){
-            spdlog::error("%s\n",strerror(errno));
+            spdlog::error("{}\n",strerror(errno));
             return -1;
         }
         buffer.assign(file_io->read(File_IO::STREAM,size),size);
     }else{
         if(file_io->open(File_IO::MMAP,file_io->get_filename()) != 0){
-            spdlog::error("%s\n",strerror(errno));
+            spdlog::error("{}\n",strerror(errno));
             return -1;
         }
         buffer.assign(file_io->read(File_IO::MMAP,size),size);
@@ -377,6 +380,7 @@ string APP::Exec_Cmd_Set(Msg& msg, string key, string value)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
@@ -426,6 +430,7 @@ string APP::Exec_Cmd_Appand(Msg&msg ,string key, string value)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     it->second->security_string.append(value);
     return ret_msg[RET_OK];
@@ -460,6 +465,7 @@ string APP::Exec_Cmd_Delete(Msg& msg,string key)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     std::map<std::string,std::shared_ptr<Security_String>>::iterator it=string_store.store.find(key);
     if(it==string_store.store.end()){
@@ -497,6 +503,7 @@ string APP::Exec_Cmd_ASet(Msg& msg,string key,vector<string_view> &res)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
@@ -570,6 +577,7 @@ string APP::Exec_Cmd_ADelete(Msg& msg,string key,vector<string_view> &res)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     string ret_value;
     std::map<std::string,std::shared_ptr<Security_Array>>::iterator it = array_store.store.find(key);
@@ -650,6 +658,7 @@ string APP::Exec_Cmd_LPUSH(Msg& msg,string key, vector<string_view> &res)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     lock.unlock();
 
@@ -680,6 +689,7 @@ string APP::Exec_Cmd_RPUSH(Msg& msg,string key, vector<string_view> &res)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
@@ -753,6 +763,7 @@ string APP::Exec_Cmd_LDelete(Msg& msg,string key, vector<string_view> &res)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     std::map<std::string,std::shared_ptr<Security_List>>::iterator it = list_store.store.find(key);
     //未找到key
@@ -834,6 +845,7 @@ string APP::Exec_Cmd_RSet(Msg& msg,string key,vector<string_view> &res)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
@@ -899,6 +911,7 @@ string APP::Exec_Cmd_RDelete(Msg& msg,string key,vector<string_view> &res)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     std::map<std::string,std::shared_ptr<Security_RBtree>>::iterator it=rbtree_store.store.find(key);
     if(it == rbtree_store.store.end()){
@@ -969,6 +982,7 @@ string APP::Exec_Cmd_SSet(Msg& msg,string key, vector<string_view> &res)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     lock.unlock();
     std::unique_lock key_lock(*it->second->mtx,std::defer_lock);
@@ -1040,6 +1054,7 @@ string APP::Exec_Cmd_SDelete(Msg& msg,string key, vector<string_view> &res)
     }
     if(!file_io->Is_Loading){
         file_io->write(std::move(msg.buffer+"\n"));
+        if(cmd_recorder.Get_Is_Record()) cmd_recorder.Add_Num();
     }
     string ret_value;
     std::map<std::string,std::shared_ptr<Security_Set>>::iterator it = set_store.store.find(key);
@@ -1105,6 +1120,7 @@ string APP::Exec_Cmd_Eevent_Beg(Msg& msg)
 {
     Exec_Cmd_Clean_Cache(msg);
     BackUp();
+    cmd_recorder.Set_Is_Record(true);
     msg.Event_Start->store(true);
     affairs.emplace(msg.fd,std::make_shared<Affairs>());
     return ret_msg[RET_NULL];
@@ -1152,7 +1168,7 @@ void APP::BackUp()
     }
 }
 
-string APP::Exec_Cmd_End(Msg& msg)
+string APP::Exec_Cmd_Event_End(Msg& msg)
 {
     //防止死锁
     //std::unique_lock lock(*back_store.mtx);
@@ -1167,7 +1183,7 @@ string APP::Exec_Cmd_End(Msg& msg)
             || ret==ret_msg[RET_NO_KEY] || ret== ret_msg[RET_NO_FIELD]){
             Exec_Cmd_RollBack(msg);
             affairs.erase(it);
-            std::cout << std::string(cmd + " : ") + ret <<std::endl;
+            //std::cout << std::string(cmd + " : ") + ret <<std::endl;
             return std::string(cmd + " : ") + ret;
         }
     }
@@ -1217,6 +1233,14 @@ string APP::Exec_Cmd_RollBack(Msg &msg)
         const auto& pair = set_store.store.emplace(it->first,std::make_shared<Security_Set>());
         pair.first->second->security_set = it->second->security_set;
     }
+
+    cmd_recorder.Set_Is_Record(false);
+
+    file_io->close(File_IO::STREAM);
+
+    file_io->erase_from_end(cmd_recorder.Get_Num());
+    file_io->open(File_IO::STREAM,file_io->get_filename());
+    cmd_recorder.Reset();
     return ret_msg[RET_OK];
 }
 
@@ -1237,6 +1261,8 @@ string APP::Exec_Cmd_Clean_AOF(Msg& msg)
     if(std::filesystem::exists(file_io->back_filename)){
         std::filesystem::remove(file_io->back_filename);
     }
+    file_io->close(File_IO::STREAM);
     std::filesystem::rename(file_io->get_filename(),file_io->back_filename);
+    file_io->open(File_IO::STREAM,file_io->get_filename());
     return ret_msg[RET_OK];
 }

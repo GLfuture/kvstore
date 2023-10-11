@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-10-01 06:10:54
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-07 05:39:17
+ * @LastEditTime: 2023-10-11 13:20:55
  */
 
 #pragma once
@@ -352,4 +352,43 @@ public:
     std::map<std::string, std::shared_ptr<Security_RBtree>> rbtree_store;
     std::map<std::string, std::shared_ptr<Security_Set>> set_store;
 
+};
+
+
+class Security_Recorder
+{
+public:
+    Security_Recorder()
+    {
+        num.store(0 , std::memory_order::relaxed);
+        Is_Record.store(false , std::memory_order::relaxed);
+    }
+    
+    void Add_Num()
+    {
+        num.fetch_add(1,std::memory_order::relaxed);
+    }
+
+    int Get_Num()
+    {
+        return num.load();
+    }
+    
+    void Reset()
+    {
+        num.store(0,std::memory_order::relaxed);
+    }
+
+    void Set_Is_Record(bool is_record)
+    {
+        Is_Record.store(is_record,std::memory_order::relaxed);
+    }
+
+    bool Get_Is_Record()
+    {
+        return Is_Record.load();
+    }
+
+    std::atomic_char32_t num;
+    std::atomic_bool Is_Record;
 };
