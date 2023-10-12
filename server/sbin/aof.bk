@@ -1,1 +1,24 @@
-SET name kkkk
+SET str 'my best girl friend'
+APPAND str ' is lyj'
+DELETE str
+ASET name king
+ASET name Darren gzj lyj gzb
+ADELETE name gzb
+ADELETE name gzj lyj
+ADELETE name
+LPUSH test world hello
+RPUSH test my name
+LDELETE test hello
+LDELETE test my name
+LDELETE test
+RSET key girl lyj
+RSET key boy gzj animal cat food milk house tcyp
+RDELETE key animal
+RDELETE key house food
+RDELETE key
+SSET name king
+SSET name Darren gzj lyj gzb
+SDELETE name gzb
+SDELETE name gzj lyj
+SDELETE name
+SET name lu

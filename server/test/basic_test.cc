@@ -4,15 +4,16 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-10 11:27:15
+ * @LastEditTime: 2023-10-12 13:05:56
  */
-#include<iostream>
-#include<netinet/in.h>
-#include<string.h>
-#include"Client_Socket/Client_Socket.hpp"
-using namespace Client_Socket_NSP;
+#include <iostream>
+#include <netinet/in.h>
+#include <string.h>
+#include <string>
+#include "netlib/netlib.h"
 #define VERSION_LEN 4
 #define SERVER_IP "192.168.124.140"
+using namespace std;
 class Proto_Head
 {
 public:
@@ -30,27 +31,26 @@ void  Decode_Proto_Head(string buffer,Proto_Head& head)
 }
 
 
-void Test(Client_Socket& client ,string send_msg,string except,const char* func, bool flag)
+void Test(Client_Sock& client ,string send_msg,string except,const char* func, bool flag)
 {
     
-    int send_len = send(client.Get_Fd(),send_msg.c_str(),send_msg.length(),0);
+    int send_len = client.Send(send_msg);
+    string buffer = "";
     if(!flag){
-        int len = client.Recv(sizeof(Proto_Head));
+        int len = client.Recv(buffer,sizeof(Proto_Head));
         //std::cout<< len <<std::endl;
         Proto_Head head;
         memset(&head,0,sizeof(Proto_Head));
-        Decode_Proto_Head(string(client.Get_Read_Buffer()),head);
-        client.Clean_Read_Buffer();
-        len = client.Recv(head.length);
+        Decode_Proto_Head(buffer,head);
+        len = client.Recv(buffer,head.length);
         //std::cout<<"body len : "<<len <<std::endl;
     }
-    if(client.Get_Read_Buffer().compare(except)==0){
+    if(buffer.compare(except)==0){
         printf("%s : Success\n",func);
     }else{
         printf("%s : Failed\n",func);
-        printf("failue return : %s %ld %ld\n",client.Get_Read_Buffer().cbegin(),client.Get_Read_Buffer().size(),except.length());
+        printf("failue return : %s %ld %ld\n",buffer.c_str(),buffer.size(),except.length());
     }
-    client.Clean_Read_Buffer();
 }
 
 string Proc_Protocol(string content)
@@ -67,9 +67,9 @@ string Proc_Protocol(string content)
 int main(int argc,char *argv[])
 {
     if(argc<2) exit(0);
-    Client_Socket client(SERVER_IP,atoi(argv[1]));
-    client.Socket_Init();
-    client.Connect();
+    Client_Sock client;
+    int fd = client.Sock();
+    client.Connect(SERVER_IP,atoi(argv[1]));
     Test(client,Proc_Protocol("SET str 'my best girl friend'"),"OK","SET",false);
     Test(client,Proc_Protocol("LEN str"),"19","LEN",false);
     Test(client,Proc_Protocol("APPAND str ' is lyj'"),"OK","APPAND",false);

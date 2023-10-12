@@ -1,4 +1,0 @@
-SET name gong
-DELETE name
-SET name gong
-SSET name gong
