@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Version: 1.0
+ * @Author: Gong
+ * @Date: 2023-10-12 20:48:44
+ * @LastEditors: Gong
+ * @LastEditTime: 2023-10-14 16:20:04
+ */
 #include "config/config.h"
 
 int Config_NSP::Config_Base::Read_Conf(const std::string &filepath, std::string &result)
@@ -24,7 +32,7 @@ int Config_NSP::Config_Base::Read_Conf(const std::string &filepath, std::string 
 
 int Config_NSP::Config_Json::Load_Conf(const std::string &filepath)
 {
-    std::string content;
+    std::string content = "";
     int ret = Read_Conf(filepath, content);
     if (!!ret)
     {

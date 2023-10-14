@@ -1,8 +1,8 @@
 {
     "port": 9999,
     "backlog":10,
-    "event_num":1024,
-    "thread_num":4,
+    "event_num":2048,
+    "decode_thread_num":2,
     "lock_wait_millisecond":100,
     "aof_path":"./kvstore.aof",
     "aof_back_path":"./aof.bk",

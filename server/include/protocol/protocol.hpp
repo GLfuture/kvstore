@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-10-05 07:59:08
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-09 04:35:24
+ * @LastEditTime: 2023-10-13 16:30:36
  */
 #pragma once
 #include <iostream>
@@ -53,13 +53,13 @@ public:
     }
     void Ready_Add_Cmd(std::string cmd)
     {
-        ready_cmds->seurity_queue.push(cmd);
+        ready_cmds->security_queue.push(cmd);
     }
 
     std::string Get_An_Cmd()
     {
-        std::string res = ready_cmds->seurity_queue.front();
-        ready_cmds->seurity_queue.pop();
+        std::string res = ready_cmds->security_queue.front();
+        ready_cmds->security_queue.pop();
         return res;
     }
 

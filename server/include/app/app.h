@@ -13,13 +13,14 @@
 #include <unordered_set>
 #include <list>
 #include <span>
+#include <condition_variable>
 using std::map;
 using std::queue;
 using std::span;
 using std::unordered_set;
 using std::list;
 #define THREAD_NUM 8
-
+#define NOTIFY_TIME 10
 
 #define LIMIT_STREAM_SIZE 10*1024*1024
 //后期可将一部分string优化为string_view，减少拷贝
@@ -147,19 +148,23 @@ public:
      * @return {*}
      * @author: Gong
      */
-    APP(uint32_t event_num,uint16_t port, uint16_t backlog, uint8_t thread_num,uint64_t wait_for_lock_millisec
+    APP(uint32_t event_num,Server_Ptr& server, uint8_t thread_num,uint64_t wait_for_lock_millisec
         ,std::string aof_file_path,std::string aof_bk_file_path)
     {
         file_io = std::make_shared<File_IO>(aof_file_path,aof_bk_file_path);
         wait_lock_millisec = wait_for_lock_millisec;
         R = new Reactor(event_num);
         th_pool.Create(thread_num);
-        Server_Ptr server = std::make_shared<Server>();
         R->Add_Server(server);
-        server->Bind(port);
-        server->Listen(backlog);
         R->Set_No_Block(server->Get_Sock());
         R->Add_Reactor(server->Get_Sock(), EPOLLIN);
+        check_th = std::make_shared<std::thread>(&APP::Check,this,R);
+    }
+
+    void Add_Future(Tcp_Conn_Ptr& conn,std::shared_future<std::string>& fu)
+    {
+        conn->Future_Add(fu);
+        cond.notify_one();
     }
 
     int Read_AOF_And_Init();
@@ -185,9 +190,18 @@ public:
 
     Reactor::Timer_Ptr Add_Time_Out_cb(uint16_t timerid, uint64_t interval_time, Timer::TimerType type,function<void()> &&timeout_cb);
 
-    string Work(APP::Tcp_Conn_Ptr& conn);
+    string Work(APP::Tcp_Conn_Ptr& conn,int len);
 private:
-
+    void Check(Reactor* R)
+    { 
+        Server_Ptr server = std::dynamic_pointer_cast<Server>(R->Get_Server());
+        std::mutex mtx;
+        std::unique_lock lock(mtx);
+        while(1){
+            cond.wait_for(lock,std::chrono::milliseconds(NOTIFY_TIME));
+            server->Check_Conns_Has_Fininshed_Task(R);
+        }
+    }
 
     string Decode(Msg& msg);
 
@@ -252,6 +266,8 @@ private:
 
     File_IO_Ptr file_io;
 
+    std::shared_ptr<std::thread> check_th;//检测线程
+    std::condition_variable cond;
 
     uint64_t cmd_save_millisec;//定时保存命令到磁盘以防宕机或连接断开
 

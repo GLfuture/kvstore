@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-11 08:34:02
+ * @LastEditTime: 2023-10-14 20:27:35
  */
 
 #include "app/app.h"
@@ -21,6 +21,7 @@
 #define LOGGER_NAME "logger"
 #define MAX_LOG_SIZE 10*1024*1024
 #define MAX_LOG_FILE_NUM 5
+#define FORK_PROCESS_NUM 4
 #define LOG_LEVEL spdlog::level::debug
 
 using namespace Config_NSP;
@@ -74,19 +75,25 @@ void Read_cb(APP* app,Reactor *R, ThreadPool &th_pool)
     if (len <= 0)
     {
         app->Deal_Closed_Conn(conn,EPOLLIN);
+        server->Close(clientfd);
+        std::cout<<"close fd :"<<clientfd<<std::endl;
         return;
     }
+    //std::cout<<head.length<<std::endl;
     len = server->Recv(conn,head.length);
+    if(len != head.length){
+        return;
+    }
     if(len <= 0){
-        R->Del_Reactor(clientfd,EPOLLIN);
+        app->Deal_Closed_Conn(conn,EPOLLIN);
         server->Close(clientfd);
+        std::cout<<"close fd :"<<clientfd<<std::endl;
         return;
     }
     //std::cout<<"cmd: "<<conn->Get_Rbuffer()<<std::endl;
-    std::future<string> res = th_pool.exec(std::bind(&APP::Work,app,conn));
+    std::future<string> res = th_pool.exec(std::bind(&APP::Work,app,conn,len));
     std::shared_future<string> share_res=res.share();
-    conn->Future_Add(share_res);
-    R->Mod_Reactor(clientfd,EPOLLOUT);
+    app->Add_Future(conn,share_res);
 }
 
 /**
@@ -106,8 +113,6 @@ void Write_cb(Reactor *R)
     APP::Server_Ptr server = std::dynamic_pointer_cast<Server>(R->Get_Server());
     APP::Tcp_Conn_Ptr conn = std::dynamic_pointer_cast<Tcp_Conn>(server->Get_Conn(clientfd));
     string res;
-    while(!conn->Future_Has_Finished()){
-    };
     res = conn->Future_Get_An_Finished();
     //std::cout<<res<<std::endl;
     if(!res.empty()){
@@ -154,7 +159,7 @@ int main(int argc,char*argv[])
         ret = json.Get_Value<int>(json.Get_Root_Value(), "backlog", backlog);
         if (ret == -1)
             exit(-1);
-        ret = json.Get_Value<int>(json.Get_Root_Value(), "thread_num", thread_num);
+        ret = json.Get_Value<int>(json.Get_Root_Value(), "decode_thread_num", thread_num);
         if (ret == -1)
             exit(-1);
         ret = json.Get_Value<int>(json.Get_Root_Value(),"lock_wait_millisecond",lock_wait_millisecond);
@@ -170,19 +175,29 @@ int main(int argc,char*argv[])
         if(ret == -1)
             exit(-1);
     }
-    APP app(event_num,port,backlog,thread_num,lock_wait_millisecond,aof_path,aof_back_path);
+    APP::Server_Ptr server = std::make_shared<Server>();
+    if(server->Bind(port)!=0){
+        spdlog::error("bind failed\n");
+    }
+    if(server->Listen(backlog)!=0)
+    {
+        spdlog::error("listen failed\n");
+    }
+    APP app(event_num, server, thread_num, lock_wait_millisecond, aof_path, aof_back_path);
     int ret = app.Read_AOF_And_Init();
-    if(ret != 0) 
+    if (ret != 0)
     {
         std::cout << std::strerror(ret);
         exit(-1);
     }
+
     std::function<void()> accptcb = std::bind(Accept_cb,app.Get_Reactor());
-    std::function<void()> readcb = std::bind(Read_cb,&app,app.Get_Reactor(),std::ref(app.Get_Thread_Pool()));
-    std::function<void()> writecb = std::bind(Write_cb,app.Get_Reactor()); 
+    std::function<void()> readcb = std::bind(Read_cb, &app, app.Get_Reactor(), std::ref(app.Get_Thread_Pool()));
+    std::function<void()> writecb = std::bind(Write_cb, app.Get_Reactor());
     std::function<void()> exitcb = NULL;
-    //app.Init(atoi(argv[1]),MAX_CONN_NUM);
-    app.Init_cb(accptcb,readcb,writecb,exitcb);
+    // app.Init(atoi(argv[1]),MAX_CONN_NUM);
+    app.Init_cb(accptcb, readcb, writecb, exitcb);
     app.Run();
+
     return 0;
 }

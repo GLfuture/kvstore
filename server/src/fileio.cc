@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-10-09 11:32:31
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-11 13:47:38
+ * @LastEditTime: 2023-10-13 20:23:33
  */
 #include "fileio/fileio.h"
 
@@ -25,7 +25,7 @@ const std::string File_IO_Base::get_filename()
 int File_IO::open(FILE_IO_FORM form, const std::string&& filename)
 {
     if(form == STREAM){
-        stream->open(filename,std::fstream::in | std::fstream::out | std::fstream::app);
+        stream->open(filename,std::ios::binary | std::ios::in | std::ios::out | std::ios::app);
         if(stream->fail()){
             std::cout<<"stream open failed\n"<<std::endl;
             return errno;
@@ -33,7 +33,7 @@ int File_IO::open(FILE_IO_FORM form, const std::string&& filename)
     }else if(form == MMAP)
     {
         fd = ::open(filename.c_str(),O_RDWR | O_CREAT);
-        if( fd == -1){
+        if( fd == -1){ 
             std::cout<<"mmap open failed\n"<<std::endl;
             return fd;
         }

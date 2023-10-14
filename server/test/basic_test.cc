@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-12 13:05:56
+ * @LastEditTime: 2023-10-14 16:34:46
  */
 #include <iostream>
 #include <netinet/in.h>
@@ -35,6 +35,7 @@ void Test(Client_Sock& client ,string send_msg,string except,const char* func, b
 {
     
     int send_len = client.Send(send_msg);
+    std::cout<<send_len<<"    "<<send_msg.length()<<std::endl;
     string buffer = "";
     if(!flag){
         int len = client.Recv(buffer,sizeof(Proto_Head));

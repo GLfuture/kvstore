@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-09-30 11:59:38
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-03 07:41:43
+ * @LastEditTime: 2023-10-13 11:30:45
  */
 #pragma once
 #include <iostream>
@@ -71,7 +71,7 @@ public:
         
     }
     
-private:
+protected:
     std::mutex mtx;
     int _fd;
     map<uint32_t,Tcp_Conn_Base_Ptr> connections;

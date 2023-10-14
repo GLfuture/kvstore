@@ -4,7 +4,7 @@
  * @Author: Gong
  * @Date: 2023-10-01 06:10:54
  * @LastEditors: Gong
- * @LastEditTime: 2023-10-11 13:20:55
+ * @LastEditTime: 2023-10-14 19:50:04
  */
 
 #pragma once
@@ -21,24 +21,62 @@
 #include <queue>
 #include <stack>
 
+class Security_Future
+{
+public:
+    Security_Future()
+    {
+        Is_Finished.store(false,std::memory_order::relaxed);
+    }
+
+    Security_Future(const Security_Future& other)
+    {
+        Is_Finished.store(other.Is_Finished.load());
+        res  = std::move(other.res);
+    }
+
+    Security_Future(Security_Future*& other)
+    {
+        Is_Finished.store(other->Is_Finished.load());
+        res  = std::move(other->res);
+    }
+
+    void Set_Shared_Future(std::shared_future<std::string>& fu)
+    {
+        res = fu;
+    }
+
+    Security_Future& operator=(const Security_Future& other)
+    {
+        if(this != &other){
+            this->Is_Finished.store(other.Is_Finished.load());
+            this->res = std::move(other.res);
+        }
+        return *this;
+    }
+
+    std::atomic_bool Is_Finished;
+    std::shared_future<std::string> res;
+};
 
 class Security_Future_Queue
 {
 public:
     Security_Future_Queue(){
-        mtx = std::make_shared<std::mutex>();
+        mtx = std::make_shared<std::shared_mutex>();
     }
     Security_Future_Queue(const Security_Future_Queue&& other){
         this->mtx = std::move(other.mtx);
-        this->seurity_queue = std::move(other.seurity_queue);
+        this->security_queue = std::move(other.security_queue);
     }
     Security_Future_Queue(const Security_Future_Queue*& other){
         this->mtx = std::move(other->mtx);
-        this->seurity_queue = std::move(other->seurity_queue);
+        this->security_queue = std::move(other->security_queue);
     }
-    std::shared_ptr<std::mutex> mtx;
-    std::queue<std::shared_future<std::string>> seurity_queue;
+    std::shared_ptr<std::shared_mutex> mtx;
+    std::queue<Security_Future> security_queue;
 };
+
 
 class Security_Cmd_Queue
 {
@@ -48,14 +86,14 @@ public:
     }
     Security_Cmd_Queue(const Security_Cmd_Queue&& other){
         this->mtx = std::move(other.mtx);
-        this->seurity_queue = std::move(other.seurity_queue);
+        this->security_queue = std::move(other.security_queue);
     }
     Security_Cmd_Queue(const Security_Cmd_Queue*& other){
         this->mtx = std::move(other->mtx);
-        this->seurity_queue = std::move(other->seurity_queue);
+        this->security_queue = std::move(other->security_queue);
     }
     std::shared_ptr<std::mutex> mtx;
-    std::queue<std::string> seurity_queue;
+    std::queue<std::string> security_queue;
 };
 
 class Security_Cmd_Vector
