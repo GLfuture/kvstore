@@ -3,8 +3,8 @@
  * @Version: 1.0
  * @Author: Gong
  * @Date: 2023-09-29 05:40:03
- * @LastEditors: Gong
- * @LastEditTime: 2023-10-14 20:27:35
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-10-18 17:32:06
  */
 
 #include "app/app.h"
@@ -47,10 +47,11 @@ void Accept_cb(Reactor *R)
 {
 
     APP::Server_Ptr server = std::dynamic_pointer_cast<Server>(R->Get_Server());
-    int clinetfd = server->Accept();
-    APP::Tcp_Conn_Ptr conn = std::make_shared<Tcp_Conn>(clinetfd);
+    int clientfd = server->Accept();
+    APP::Tcp_Conn_Ptr conn = std::make_shared<Tcp_Conn>(clientfd);
     server->Add_Conn(conn);
-    R->Add_Reactor(clinetfd, EPOLLIN);
+    R->Set_No_Block(clientfd);
+    R->Add_Reactor(clientfd, EPOLLIN);
 }
 
 
@@ -72,23 +73,29 @@ void Read_cb(APP* app,Reactor *R, ThreadPool &th_pool)
     Proto_Head head;
     //头中携带len信息，防止Tcp粘包
     int len = server->Recv_Rroto_Head(clientfd,head);
-    if (len <= 0)
+    if (len == 0)
     {
         app->Deal_Closed_Conn(conn,EPOLLIN);
         server->Close(clientfd);
         std::cout<<"close fd :"<<clientfd<<std::endl;
         return;
     }
+    if(len < 0){
+        return ;
+    }
     //std::cout<<head.length<<std::endl;
     len = server->Recv(conn,head.length);
     if(len != head.length){
         return;
     }
-    if(len <= 0){
+    if(len == 0){
         app->Deal_Closed_Conn(conn,EPOLLIN);
         server->Close(clientfd);
         std::cout<<"close fd :"<<clientfd<<std::endl;
         return;
+    }
+    if(len < 0){
+        return ;
     }
     //std::cout<<"cmd: "<<conn->Get_Rbuffer()<<std::endl;
     std::future<string> res = th_pool.exec(std::bind(&APP::Work,app,conn,len));
