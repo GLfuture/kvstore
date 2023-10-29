@@ -1,12 +1,3 @@
-<!--
- * @Description: 
- * @Version: 1.0
- * @Author: Gong
- * @Date: 2023-09-29 05:40:03
- * @LastEditors: Gong
- * @LastEditTime: 2023-10-14 17:12:02
--->
-<<<<<<< HEAD
 # kvstore
 一个内存数据库
 ### 依赖
@@ -14,11 +5,11 @@ spdlog
 rapaidjson(已内置)
 gcc 版本支持C++20 (8.0以上) 
 
-=======
 ### 协议头
+
 version:1.0 //4byte
+
 length //4byte
-=======
 
 
 =======
